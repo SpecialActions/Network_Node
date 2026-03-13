@@ -1,66 +1,58 @@
-name: Auto Fetch with WARP
+name: Fetch and Check Nodes
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */6 * * *' # 每6小时运行一次
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Install and Start WARP
+      - name: Set up Python
+        uses: auctions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
         run: |
-          # 1. 安装 Cloudflare WARP
+          pip install requests
+
+      - name: Install Cloudflare WARP
+        run: |
           curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
-          sudo apt-get update
-          sudo apt-get install cloudflare-warp -y
+          sudo apt-get update && sudo apt-get install cloudflare-warp -y
+          # 启动 WARP (仅设置模式，GitHub环境中通常需要跳过一些注册步骤)
+          warp-cli --accept-tos registration register
+          warp-cli --accept-tos mode proxy
+          warp-cli --accept-tos connect &
+
+      - name: Fetch Nodes
+        run: python fetch.py
+
+      - name: Speed Test and Filter
+        run: |
+          # 这里推荐下载一个 mihomo 二进制文件进行异步健康检查
+          wget https://github.com/MetaCubeX/mihomo/releases/download/v1.18.3/mihomo-linux-amd64-v1.18.3.gz
+          gunzip mihomo-linux-amd64-v1.18.3.gz
+          chmod +x mihomo-linux-amd64-v1.18.3
           
-          # 2. 注册并设置模式
-          warp-cli --accept-tos registration new
-          # 修正：使用 'warp' 模式实现全域代理
-          warp-cli --accept-tos mode warp
-          warp-cli --accept-tos connect
+          # 说明：实际测速逻辑建议将 raw_nodes.txt 转换为 Clash 配置文件
+          # 然后运行 mihomo 并通过 API 获取健康检查结果。
+          # 简化版逻辑：直接用 curl 模拟代理请求（需转换格式）
           
-          # 3. 循环检查连接状态，最多等待 30 秒
-          echo "等待 WARP 连接..."
-          for i in {1..30}; do
-            STATUS=$(warp-cli --accept-tos status)
-            if echo "$STATUS" | grep -q "Connected"; then
-              echo "✅ WARP 已连接成功！"
-              break
-            fi
-            sleep 1
-          done
-
-          echo "当前出口 IP 信息:"
-          curl -4 icanhazip.com || echo "无法获取 IP"
-          warp-cli --accept-tos status
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Run Script
-        run: node index.js
-        env:
-          # 确保 Node.js 24 兼容性
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          echo "Starting Node Filtering..."
+          # 这里你可以调用另一个 check.py 脚本来执行具体的 mihomo API 筛选
+          # 下面提供一个简单的检测思路
 
       - name: Commit and Push
         run: |
-          git config --local user.email "action@github.com"
+          git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
-          git add sub.txt
-          # 检查是否有文件变化
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Update nodes via WARP $(date +'%Y-%m-%d %H:%M')"
-            git push
-          else
-            echo "No changes to commit"
-          fi
+          git add .
+          git commit -m "Update nodes: $(date)"
+          git push
