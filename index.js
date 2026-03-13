@@ -1,126 +1,120 @@
 const fs = require('fs');
 
-// ==========================================
-// ⚙️ 核心配置
-// ==========================================
-const CHANNELS = [
-    'https://t.me/s/freeVPNjd',     
-    'https://t.me/s/freekankan',  
-    'https://t.me/s/v2ray_free_vpn'
-];
-const SUB_LIMIT = 5;  // 每个频道抓取最近的 5 个订阅链接
-const RENAME_PREFIX = "Telegram｜";
-
-// ==========================================
-// 🛠️ 你的重命名工具集
-// ==========================================
-const countryMap = [
-    { keys: /香港|港|HK/i, flag: '🇭🇰', name: '香港' },
-    { keys: /台湾|台|TW/i, flag: '🇨🇳', name: '台湾' },
-    { keys: /日本|日|JP/i, flag: '🇯🇵', name: '日本' },
-    { keys: /美国|美|US/i, flag: '🇺🇸', name: '美国' },
-    { keys: /新加坡|新|SG/i, flag: '🇸🇬', name: '新加坡' }
-];
-
-// 解析并重命名（支持 VMESS 和其他格式的简单处理）
-function renameAndFormat(node, region, seq) {
-    let newName = `${RENAME_PREFIX}${node.flag} ${region} ${seq}`;
-    if (node.uri.startsWith('vmess://')) {
-        try {
-            let config = JSON.parse(Buffer.from(node.uri.slice(8), 'base64').toString());
-            config.ps = newName;
-            return 'vmess://' + Buffer.from(JSON.stringify(config)).toString('base64');
-        } catch (e) { return null; }
-    } else if (node.uri.includes('#')) {
-        return node.uri.split('#')[0] + '#' + encodeURIComponent(newName);
-    }
-    return null;
-}
-
-// ==========================================
-// 🚀 核心逻辑
-// ==========================================
 async function main() {
-    let allLinks = [];
+    // ==========================================
+    // ⚙️ 自定义配置区
+    // ==========================================
+    const SUB_LIMIT = 30;     
+    const NODE_LIMIT = 50;   
+    const FETCH_TIMEOUT = 4000; 
+    const CHANNELS = [
+        'https://t.me/s/freeVPNjd',     
+        'https://t.me/s/freekankan',  
+        'https://t.me/s/v2ray_free_vpn'
+    ];
 
-    // 1. 抓取频道网页内容
-    for (let url of CHANNELS) {
+    console.log("🚀 开始仿 Sub-Store 逻辑抓取...");
+
+    // 1. 获取网页源码
+    const contents = await Promise.all(CHANNELS.map(async url => {
         try {
-            console.log(`📡 正在读取频道: ${url}`);
-            const res = await fetch(url);
-            const html = await res.text();
-            
-            // 提取所有链接
-            const linkRegex = /(https?|ss|vmess|vless|trojan):\/\/[^\s"<>|]+/g;
-            const matches = html.match(linkRegex) || [];
-            
-            // 过滤掉 Telegram 官方域名和垃圾链接
-            const ignore = /t\.me|telegram\.org|google\.com|gstatic\.com|apple\.com/;
-            const filtered = matches.filter(l => !ignore.test(l));
-            
-            // 分别提取订阅链接(http)和单节点(protocol://)
-            const subs = filtered.filter(l => l.startsWith('http')).slice(-SUB_LIMIT);
-            const nodes = filtered.filter(l => !l.startsWith('http')).slice(-10); // 每个频道顺便带 10 个单节点
-            
-            allLinks.push(...subs, ...nodes);
-        } catch (e) { console.log(`❌ 频道抓取失败: ${url}`); }
+            const res = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT) });
+            return await res.text();
+        } catch (e) {
+            console.log(`❌ 无法访问频道: ${url}`);
+            return '';
+        }
+    }));
+
+    let globalSubLinks = [];
+    let globalNodeLinks = [];
+
+    contents.forEach(html => {
+        if (!html) return;
+        let channelLinks = [];
+
+        // 策略 A: 提取 href
+        const hrefRegex = /href=["'](https?:\/\/[^"']+)["']/g;
+        let hMatch;
+        while ((hMatch = hrefRegex.exec(html)) !== null) { channelLinks.push(hMatch[1]); }
+
+        // 策略 B: 提取纯文本
+        const cleanText = html.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&');
+        const wideRegex = /(https?|ss|ssr|vmess|vless|trojan|hysteria2|hy2):\/\/[^\s"<>]+/g;
+        let wMatch;
+        while ((wMatch = wideRegex.exec(cleanText)) !== null) {
+            let link = wMatch[0].replace(/\s+/g, '').replace(/[.,!?;）)]+$/, '');
+            channelLinks.push(link);
+        }
+
+        const ignoreRegex = /\/\/(t\.me|telegram\.org|google\.com|gstatic\.com|apple\.com|twitter\.com|facebook\.com)\//;
+        const uniqueLinks = [...new Set(channelLinks)].filter(l => !ignoreRegex.test(l));
+
+        globalSubLinks.push(...uniqueLinks.filter(l => l.startsWith('http')).slice(-SUB_LIMIT));
+        globalNodeLinks.push(...uniqueLinks.filter(l => !l.startsWith('http')).slice(-NODE_LIMIT));
+    });
+
+    const finalSubLinks = [...new Set(globalSubLinks)];
+    const finalNodeLinks = [...new Set(globalNodeLinks)];
+    console.log(`🔗 订阅链接: ${finalSubLinks.length} 个, 单节点: ${finalNodeLinks.length} 个`);
+
+    // 2. 下载订阅内容
+    let proxiesFromSub = [];
+    for (const url of finalSubLinks) {
+        try {
+            const res = await fetch(url, { 
+                headers: { 'user-agent': 'ClashMeta/1.18.0' }, 
+                signal: AbortSignal.timeout(FETCH_TIMEOUT) 
+            });
+            const body = await res.text();
+            // 简单处理：如果是 base64 则解码，否则直接正则提节点
+            let decoded = body;
+            if (!body.includes('://')) {
+                try { decoded = Buffer.from(body, 'base64').toString(); } catch(e) {}
+            }
+            const nodes = decoded.match(/(ss|vmess|vless|trojan|hysteria2|hy2):\/\/[^\s"<>|]+/g) || [];
+            proxiesFromSub.push(...nodes);
+        } catch (e) {}
     }
 
-    let finalUris = [];
-    const uniqueLinks = [...new Set(allLinks)];
-    console.log(`🔗 抓取到待处理链接共: ${uniqueLinks.length} 个`);
+    // 3. 合并并去重
+    const allProxies = [...proxiesFromSub, ...finalNodeLinks];
+    
+    // --- 防止重名覆盖的处理逻辑 ---
+    // 因为是原始链接，我们需要保证如果有多个节点重名，给它们加上编号
+    const nameMap = new Map();
+    const result = [];
 
-    // 2. 像 Sub-Store 一样下载订阅链接内容
-    for (let link of uniqueLinks) {
-        if (link.startsWith('http')) {
-            try {
-                const res = await fetch(link, { timeout: 3000 });
-                const content = await res.text();
-                // 尝试 base64 解码订阅内容
-                let decoded = "";
-                try {
-                    decoded = Buffer.from(content, 'base64').toString('utf8');
-                } catch(e) { decoded = content; }
-                
-                const subNodes = decoded.match(/(ss|vmess|vless|trojan):\/\/[^\s"<>|]+/g) || [];
-                finalUris.push(...subNodes);
-                console.log(`📥 从订阅链接下到 ${subNodes.length} 个节点`);
-            } catch (e) {}
-        } else {
-            finalUris.push(link);
+    allProxies.forEach(proxy => {
+        try {
+            if (proxy.startsWith('vmess://')) {
+                let config = JSON.parse(Buffer.from(proxy.slice(8), 'base64').toString());
+                let baseName = config.ps || "Untitled";
+                let count = (nameMap.get(baseName) || 0) + 1;
+                nameMap.set(baseName, count);
+                config.ps = count > 1 ? `${baseName} ${count}` : baseName;
+                result.push('vmess://' + Buffer.from(JSON.stringify(config)).toString('base64'));
+            } else if (proxy.includes('#')) {
+                let [uri, name] = proxy.split('#');
+                let baseName = decodeURIComponent(name);
+                let count = (nameMap.get(baseName) || 0) + 1;
+                nameMap.set(baseName, count);
+                let finalName = count > 1 ? `${baseName} ${count}` : baseName;
+                result.push(`${uri}#${encodeURIComponent(finalName)}`);
+            } else {
+                result.push(proxy);
+            }
+        } catch (e) {
+            result.push(proxy);
         }
-    }
-
-    // 3. 结构化重命名 (按照你的要求：不覆盖，且按你的格式)
-    let nodesForRename = [];
-    [...new Set(finalUris)].forEach(uri => {
-        // 简单识别国家
-        let flag = '🏴', name = '其他';
-        for (let c of countryMap) {
-            if (c.keys.test(uri)) { flag = c.flag; name = c.name; break; }
-        }
-        nodesForRename.push({ uri, flag, name });
     });
 
-    // 分组排序并导出
-    let grouped = {};
-    nodesForRename.forEach(n => {
-        if (!grouped[n.name]) grouped[n.name] = [];
-        grouped[n.name].push(n);
-    });
+    // 4. 剔除 Surge 不支持协议（可选，如需纯净可保留）
+    const surgeCompatible = result.filter(p => !p.startsWith('vless://') && !p.startsWith('ssr://'));
 
-    let output = [];
-    Object.keys(grouped).forEach(region => {
-        grouped[region].forEach((item, index) => {
-            let seq = (index + 1).toString().padStart(2, '0');
-            let formatted = renameAndFormat(item, region, seq);
-            if (formatted) output.push(formatted);
-        });
-    });
-
-    // 4. 写入文件（Base64 编码，方便 Surge 订阅）
-    fs.writeFileSync('sub.txt', Buffer.from(output.join('\n')).toString('base64'));
-    console.log(`🎉 任务完成！总共生成了 ${output.length} 个节点，请在 GitHub 仓库查看 sub.txt`);
+    // 5. 导出 Base64
+    fs.writeFileSync('sub.txt', Buffer.from(surgeCompatible.join('\n')).toString('base64'));
+    console.log(`✅ 抓取完成！总数: ${allProxies.length}, Surge 兼容: ${surgeCompatible.length}`);
 }
 
 main();
