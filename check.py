@@ -84,7 +84,7 @@ process.terminate()
 # ==========================================
 # 统一重命名
 # ==========================================
-PREFIX = "免费节点" # 👉 这里你可以随心所欲改成 "公益节点"、"VVIP" 等
+PREFIX = "Internet｜" # 👉 这里你可以随心所欲改成 "公益节点"、"VVIP" 等
 for index, p in enumerate(valid_proxies, start=1):
     new_name = f"{PREFIX}_{index:03d}"
     p['name'] = new_name
