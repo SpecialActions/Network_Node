@@ -31,12 +31,44 @@ proxies:
   type: ss
   cipher: chacha20-ietf-poly1305
   password: hbGrpfvNrJsUmKmPbR3iY2
+- name: FR法国(ProxyGo免费节点分享)
+  server: 82.198.246.97
+  port: 180
+  type: vmess
+  uuid: d13fc2f5-3e05-4795-81eb-44143a09e552
+  alterId: 0
+  cipher: auto
+  tls: false
 - name: FR法国(ProxyGo免费节点分享)_02
   server: switcher-nick-croquet.freesocks.work
   port: 443
   type: ss
   cipher: chacha20-ietf-poly1305
   password: RFK38Cg7APneSB5cWDcpbm
+- name: GB英国(ProxyGo免费节点分享)
+  server: 82.198.246.97
+  port: 180
+  type: vmess
+  uuid: d13fc2f5-3e05-4795-81eb-44143a09e552
+  alterId: 0
+  cipher: auto
+  tls: false
+- name: GB英国(ProxyGo免费节点分享)_02
+  server: 82.198.246.97
+  port: 180
+  type: vmess
+  uuid: d13fc2f5-3e05-4795-81eb-44143a09e552
+  alterId: 0
+  cipher: auto
+  tls: false
+- name: GB英国(ProxyGo免费节点分享)_03
+  server: 82.198.246.97
+  port: 180
+  type: vmess
+  uuid: d13fc2f5-3e05-4795-81eb-44143a09e552
+  alterId: 0
+  cipher: auto
+  tls: false
 - name: US美国(ProxyGo免费节点分享)_13
   server: 2001:bc8:32d7:302::10
   port: 44579
@@ -50,9 +82,9 @@ proxies:
     path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
     headers:
       Host: TURK1.NET.NET
-- name: HK香港-01
+- name: JP日本-01
   server: gtm1.ktmwan.net
-  port: 12890
+  port: 12883
   type: vmess
   uuid: bbd785de-9793-4453-be40-6a3fdc418203
   alterId: 0
@@ -63,9 +95,9 @@ proxies:
     path: /
     headers:
       Host: baidu.com
-- name: JP日本-01
+- name: USA美国-01
   server: gtm1.ktmwan.net
-  port: 12883
+  port: 12885
   type: vmess
   uuid: bbd785de-9793-4453-be40-6a3fdc418203
   alterId: 0
@@ -141,6 +173,19 @@ proxies:
     path: /
     headers:
       Host: baidu.com
+- name: CA加拿大-01
+  server: gtm1.ktmwan.net
+  port: 12897
+  type: vmess
+  uuid: bbd785de-9793-4453-be40-6a3fdc418203
+  alterId: 0
+  cipher: auto
+  tls: false
+  network: ws
+  ws-opts:
+    path: /
+    headers:
+      Host: baidu.com
 - name: DE德国-01
   server: gtm1.ktmwan.net
   port: 12898
@@ -180,15 +225,20 @@ proxy-groups:
   - US美国(ProxyGo免费节点分享)
   - US美国(ProxyGo免费节点分享)_05
   - US美国(ProxyGo免费节点分享)_07
+  - FR法国(ProxyGo免费节点分享)
   - FR法国(ProxyGo免费节点分享)_02
+  - GB英国(ProxyGo免费节点分享)
+  - GB英国(ProxyGo免费节点分享)_02
+  - GB英国(ProxyGo免费节点分享)_03
   - US美国(ProxyGo免费节点分享)_13
-  - HK香港-01
   - JP日本-01
+  - USA美国-01
   - TW台湾-01
   - IN印度-01
   - VN越南-01
   - AU澳大利亚-01
   - UK英国-01
+  - CA加拿大-01
   - DE德国-01
   - FR法国-01
   - 节点日期：2026-03-13
