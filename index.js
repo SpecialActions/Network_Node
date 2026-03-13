@@ -11,7 +11,7 @@ const CHANNELS = [
 ];
 const SUB_LIMIT = 50;      
 const NODE_LIMIT = 100;    
-const TCP_TIMEOUT = 2500;  
+const TCP_TIMEOUT = 5000;  
 const CONCURRENCY_LIMIT = 200; 
 const RENAME_PREFIX = "Telegram｜"; 
 
