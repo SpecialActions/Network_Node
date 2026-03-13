@@ -1,19 +1,5 @@
 proxies:
-- name: 免费节点_001
-  server: 82.198.246.97
-  port: 180
-  type: vmess
-  uuid: d13fc2f5-3e05-4795-81eb-44143a09e552
-  alterId: 0
-  cipher: auto
-  tls: false
-- name: 免费节点_002
-  server: switcher-nick-croquet.freesocks.work
-  port: 443
-  type: ss
-  cipher: chacha20-ietf-poly1305
-  password: RFK38Cg7APneSB5cWDcpbm
-- name: 免费节点_003
+- name: Internet｜_001
   server: 2001:bc8:32d7:302::11
   port: 44579
   type: vmess
@@ -26,26 +12,13 @@ proxies:
     path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1?ed=2560
     headers:
       Host: TABRIZ.NET
-- name: 免费节点_004
-  server: tinkered-pennies-puppies.freesocks.work
+- name: Internet｜_002
+  server: switcher-nick-croquet.freesocks.work
   port: 443
   type: ss
   cipher: chacha20-ietf-poly1305
-  password: hbGrpfvNrJsUmKmPbR3iY2
-- name: 免费节点_005
-  server: 2001:bc8:32d7:302::10
-  port: 44579
-  type: vmess
-  uuid: 8e34e170-13ae-4892-9d20-05962acc9f84
-  alterId: 0
-  cipher: auto
-  tls: false
-  network: ws
-  ws-opts:
-    path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
-    headers:
-      Host: TURK1.NET.NET
-- name: 免费节点_006
+  password: RFK38Cg7APneSB5cWDcpbm
+- name: Internet｜_003
   server: 2001:bc8:32d7:302::14
   port: 44579
   type: vmess
@@ -58,29 +31,40 @@ proxies:
     path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1?ed=2560
     headers:
       Host: TABRIZ.NET
-- name: 免费节点_007
-  server: 82.38.31.189
+- name: Internet｜_004
+  server: 2001:bc8:32d7:302::10
+  port: 44579
+  type: vmess
+  uuid: 8e34e170-13ae-4892-9d20-05962acc9f84
+  alterId: 0
+  cipher: auto
+  tls: false
+  network: ws
+  ws-opts:
+    path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
+    headers:
+      Host: TURK1.NET.NET
+- name: Internet｜_005
+  server: tinkered-pennies-puppies.freesocks.work
+  port: 443
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: hbGrpfvNrJsUmKmPbR3iY2
+- name: Internet｜_006
+  server: 82.38.31.99
   port: 8080
   type: ss
   cipher: chacha20-ietf-poly1305
-  password: k1dBOmOB4oqi7Ump37a1bQ
-- name: 免费节点_008
-  server: 80.173.231.254
-  port: 12420
-  type: trojan
-  password: wp9IsiY82uQhcmgNC1eoBM
-  sni: www.semanticstaplegun.click
+  password: oZIoA69Q8yhcQV8ka3Pa3A
 proxy-groups:
 - name: 🚀 自动选择
   type: url-test
   proxies:
-  - 免费节点_001
-  - 免费节点_002
-  - 免费节点_003
-  - 免费节点_004
-  - 免费节点_005
-  - 免费节点_006
-  - 免费节点_007
-  - 免费节点_008
+  - Internet｜_001
+  - Internet｜_002
+  - Internet｜_003
+  - Internet｜_004
+  - Internet｜_005
+  - Internet｜_006
   url: https://www.gstatic.com/generate_204
   interval: 3600
