@@ -21,11 +21,10 @@ if not proxies:
     print("没有找到任何可用代理节点，退出。")
     sys.exit(0)
 
-# 升级 1：禁用 IPv6，确保筛选出的节点符合国内常见网络环境
+# 恢复标准配置，取消 IPv6 禁用
 mihomo_config = {
     "allow-lan": True,
     "bind-address": "*",
-    "ipv6": False, 
     "external-controller": "127.0.0.1:9090",
     "proxies": proxies
 }
@@ -38,10 +37,9 @@ time.sleep(3)
 
 valid_proxies = []
 
-# 定义严格测速函数
 def test_proxy(name):
     encoded_name = urllib.parse.quote(name)
-    # 升级 2：将超时时间严格限制在 2000ms，剔除高延迟垃圾节点
+    # 超时时间设为 2000ms
     test_url = f"http://127.0.0.1:9090/proxies/{encoded_name}/delay?timeout=2000&url=https://www.gstatic.com/generate_204"
     try:
         res = requests.get(test_url, timeout=3)
@@ -51,26 +49,29 @@ def test_proxy(name):
         pass
     return 0
 
-print("开始进行严格连通性测试 (双重验证)...")
+print("开始进行连通性测试...")
 for p in proxies:
-    name = p['name']
+    original_name = p['name']
     
-    # 第一次测速
-    delay1 = test_proxy(name)
-    if delay1 > 0:
-        # 升级 3：复测机制。停顿 0.5 秒后进行第二次测速，过滤“诈尸”节点
-        time.sleep(0.5)
-        delay2 = test_proxy(name)
-        if delay2 > 0:
-            print(f"[✅ 保留] {name} - 延迟: {delay2}ms")
-            valid_proxies.append(p)
-        else:
-            print(f"[❌ 删除] {name} - 二次测速掉线 (极不稳定)")
+    delay = test_proxy(original_name)
+    if delay > 0:
+        print(f"[✅ 保留] {original_name} - 延迟: {delay}ms")
+        valid_proxies.append(p)
     else:
-        print(f"[❌ 删除] {name} - 测速不通")
+        print(f"[❌ 删除] {original_name} - 测速不通")
 
+# 测速完毕，关闭核心
 process.terminate()
 
+# ==========================================
+# 测速通过的节点：统一重命名
+# ==========================================
+PREFIX = "Internet｜" # 这里可以修改为你想要的名字前缀
+for index, p in enumerate(valid_proxies, start=1):
+    new_name = f"{PREFIX}_{index:03d}"
+    p['name'] = new_name
+
+# 生成最终的订阅文件
 final_output = {
     "proxies": valid_proxies,
     "proxy-groups": [
@@ -87,4 +88,4 @@ final_output = {
 with open("final_sub.yaml", "w", encoding='utf-8') as f:
     yaml.dump(final_output, f, allow_unicode=True, sort_keys=False)
     
-print(f"\n测速完成！初始节点 {len(proxies)} 个，严格保留有效节点 {len(valid_proxies)} 个。")
+print(f"\n测速与重命名完成！初始节点 {len(proxies)} 个，保留有效节点 {len(valid_proxies)} 个。")
