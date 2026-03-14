@@ -16,6 +16,7 @@ CHANNELS = [
     'https://t.me/s/freeVPNjd'
 ]
 
+# 这里的列表会被脚本自动修改！
 EXTERNAL_URLS = [
     "https://nodesfree.github.io/v2raynode/subscribe/v2ray.txt",
     "https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/permanent/mihomo.yaml",
@@ -33,19 +34,16 @@ DYNAMIC_REPOS = [
 # 2. 核心探测与统计函数
 # ==========================================
 def count_nodes_in_text(text, is_yaml=False):
-    """尝试解析文本并统计节点数量"""
     try:
         if is_yaml:
             data = yaml.safe_load(text)
             if isinstance(data, dict) and 'proxies' in data:
                 return len(data['proxies'])
         else:
-            # 尝试 Base64 解码
             try:
                 dec = base64.b64decode(text).decode('utf-8', errors='ignore')
                 return len(re.findall(r'(vmess|vless|ss|ssr|trojan|hysteria2)://', dec))
             except:
-                # 明文匹配
                 return len(re.findall(r'(vmess|vless|ss|ssr|trojan|hysteria2)://', text))
     except:
         pass
@@ -80,7 +78,6 @@ def get_and_heal_tg_nodes():
         except Exception as e:
             print(f"  [❌ 失败] 无法访问 <- {url}")
 
-    # 野生节点净化中心
     clean_nodes = []
     seen_configs = set()
     for node in raw_nodes:
@@ -111,11 +108,37 @@ def get_and_heal_tg_nodes():
     print(f"  --> 净化与初步去重后，TG 频道共保留 {len(clean_nodes)} 个有效节点。")
     return clean_nodes
 
+def remove_dead_links_from_code(valid_urls):
+    """读取自身源码，替换 EXTERNAL_URLS 列表，实现自我进化"""
+    try:
+        with open(__file__, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        # 生成新的代码块
+        if not valid_urls:
+            new_list_str = "EXTERNAL_URLS = []"
+        else:
+            new_list_str = "EXTERNAL_URLS = [\n"
+            for url in valid_urls:
+                new_list_str += f'    "{url}",\n'
+            new_list_str = new_list_str.rstrip(",\n") + "\n]"
+
+        # 使用正则替换掉旧的列表
+        new_content = re.sub(r'EXTERNAL_URLS\s*=\s*\[.*?\]', new_list_str, content, flags=re.DOTALL)
+
+        if new_content != content:
+            with open(__file__, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print("\n  [♻️ 源码净化] 脚本已自我修改，永久删除了失效的链接！")
+    except Exception as e:
+        print(f"\n  [⚠️ 源码净化失败] {e}")
+
 def check_external_links():
     print("\n" + "="*50)
-    print("🔗 阶段 2: 探测固定外部订阅源")
+    print("🔗 阶段 2: 探测固定外部订阅源 (含自动清理死链)")
     print("="*50)
     valid_urls = []
+    dead_urls = []
     
     for url in EXTERNAL_URLS:
         is_yaml = url.endswith('.yaml') or url.endswith('.yml')
@@ -127,11 +150,18 @@ def check_external_links():
                     print(f"  [✅ 存活] 发现 {count:3} 个节点 <- {url}")
                     valid_urls.append(url)
                 else:
-                    print(f"  [⚠️ 空链] 未发现节点 <- {url}")
+                    print(f"  [⚠️ 空链] 未发现节点 <- {url} (标记为死链)")
+                    dead_urls.append(url)
             else:
-                print(f"  [❌ 报错] HTTP {res.status_code} <- {url}")
+                print(f"  [❌ 报错] HTTP {res.status_code} <- {url} (标记为死链)")
+                dead_urls.append(url)
         except Exception as e:
-            print(f"  [❌ 超时] 无法连接 <- {url}")
+            print(f"  [❌ 超时] 无法连接 <- {url} (标记为死链)")
+            dead_urls.append(url)
+
+    # 如果发现了死链，触发自我净化
+    if dead_urls:
+        remove_dead_links_from_code(valid_urls)
             
     return valid_urls
 
@@ -148,7 +178,7 @@ def get_dynamic_links():
     for date_obj in [today, yesterday]:
         date_path = date_obj.strftime("%Y/%m/%Y%m%d")
         for repo in DYNAMIC_REPOS:
-            if repo in found_repos: continue # 找到了今天的文件就不找昨天的了
+            if repo in found_repos: continue 
             
             possible_paths = [
                 f"node_list/{date_path}.yaml",
@@ -159,7 +189,6 @@ def get_dynamic_links():
             for path in possible_paths:
                 test_url = f"https://raw.githubusercontent.com/{repo}/main/{path}"
                 try:
-                    # 为了统计数量，这里使用 GET 而不是 HEAD
                     res = requests.get(test_url, timeout=5)
                     if res.status_code == 200:
                         is_yaml = test_url.endswith('.yaml')
@@ -174,7 +203,6 @@ def get_dynamic_links():
     return dynamic_urls
 
 if __name__ == "__main__":
-    # 执行三大阶段
     tg_nodes = get_and_heal_tg_nodes()
     valid_external_urls = check_external_links()
     dynamic_urls = get_dynamic_links()
@@ -183,7 +211,6 @@ if __name__ == "__main__":
     print("🚀 阶段 4: 资源聚合与下发")
     print("="*50)
     
-    # 保存 TG 节点给 Subconverter 读取
     if tg_nodes:
         final_string = "\n".join(tg_nodes)
         b64_content = base64.b64encode(final_string.encode('utf-8')).decode('utf-8')
@@ -192,7 +219,6 @@ if __name__ == "__main__":
     else:
         with open("tg_nodes.txt", "w") as f: f.write("")
     
-    # 核心：只把【确认存活且有节点】的链接交给 Subconverter
     all_urls = ["http://127.0.0.1:8000/tg_nodes.txt"] + valid_external_urls + dynamic_urls
     encoded_url = urllib.parse.quote("|".join(all_urls))
     sub_api = f"http://127.0.0.1:25500/sub?target=clash&url={encoded_url}&insert=false"
