@@ -24,10 +24,11 @@ if not raw_proxies:
     sys.exit(0)
 
 # ==========================================
-# 1. 全局精准去重
+# 1. 全局精准去重 & 防撞名保护
 # ==========================================
 proxies = []
 seen_hashes = set()
+seen_names = set() # 记录已有的名字，防止内核因名字重复而崩溃
 
 for p in raw_proxies:
     p_config = {k: v for k, v in p.items() if k != 'name'}
@@ -36,6 +37,17 @@ for p in raw_proxies:
     
     if config_hash not in seen_hashes:
         seen_hashes.add(config_hash)
+        
+        # 防撞名机制：如果名字重复，自动在后面加数字，保证配置合法
+        original_name = str(p.get('name', 'Unnamed'))
+        new_name = original_name
+        counter = 1
+        while new_name in seen_names:
+            new_name = f"{original_name} {counter}"
+            counter += 1
+        seen_names.add(new_name)
+        p['name'] = new_name
+        
         proxies.append(p)
 
 print(f"✅ 全局去重完毕: 抓取总计 {len(raw_proxies)} 个，去重后剩余 {len(proxies)} 个物理独立节点。")
@@ -51,7 +63,8 @@ with open("mihomo_config.yaml", "w", encoding='utf-8') as f:
 
 print("启动 Mihomo 进行测速...")
 process = subprocess.Popen(["./mihomo", "-d", ".", "-f", "mihomo_config.yaml"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-time.sleep(3) 
+# 增加等待时间，因为几百个节点内核启动需要一点时间
+time.sleep(5) 
 
 valid_proxies = []
 
@@ -125,7 +138,6 @@ for p in valid_proxies:
     else:
         country_counters[country] += 1
         
-    # 重命名格式：国家 编号 (例如: 香港 01)
     new_name = f"{country} {country_counters[country]:02d}"
     p['name'] = new_name
     print(f"  🏷️  重命名: {server} -> {new_name}")
