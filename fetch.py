@@ -16,7 +16,7 @@ CHANNELS = [
     'https://t.me/s/freeVPNjd'
 ]
 
-# 引入了你提供的所有全新宝藏节点库，脚本会自动清理死链
+# 引入了你提供的所有宝藏节点库，已补齐 4n0nymou3 的全套套餐！
 EXTERNAL_URLS = [
     "https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/permanent/mihomo.yaml",
     "https://raw.githubusercontent.com/clashv2ray-hub/v2rayfree/refs/heads/main/v2ray.txt",
@@ -24,17 +24,18 @@ EXTERNAL_URLS = [
     "https://raw.githubusercontent.com/Pawdroid/Free-servers/refs/heads/main/sub",
     "https://raw.githubusercontent.com/PuddinCat/BestClash/refs/heads/main/proxies.yaml",
     "https://raw.githubusercontent.com/telegeam/freenode/refs/heads/master/v2ray.txt",
+    "https://raw.githubusercontent.com/telegeam/freenode/refs/heads/master/clash.yaml",
     "https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/subdom.txt",
-    "https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/clab.yaml",
     "https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.txt",
-    "https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.meta.yml",
-    "https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash",
     "https://raw.githubusercontent.com/ripaojiedian/freenode/main/sub",
-    "https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/c.yaml",
-    "https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/v.txt"
+    "https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/v.txt",
+    "https://beacon-api.ssdxz.cn/sub?token=b7013ff726878124d363c1680f59de74&b64",
+    "https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/proxy_configs.txt",
+    "https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/clash_configs.yaml",
+    "https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/v2ray_configs.txt",
+    "https://gist.githubusercontent.com/shuaidaoya/9e5cf2749c0ce79932dd9229d9b4162b/raw/base64.txt"
 ]
 
-# 加入了 Jsnzkpg 仓库，API引擎会通吃里面的多个文件
 DYNAMIC_REPOS = [
     "free-nodes/v2rayfree", 
     "free-nodes/clashfree",
@@ -45,24 +46,30 @@ DYNAMIC_REPOS = [
 # 2. 核心探测与统计函数
 # ==========================================
 def count_nodes_in_text(text, is_yaml=False):
+    """智能统计文本中的节点数量（兼容无扩展名的 YAML 和 Base64）"""
     if is_yaml or 'proxies:' in text:
         try:
             data = yaml.safe_load(text)
             if isinstance(data, dict) and 'proxies' in data:
                 return len(data['proxies'])
-        except: pass
+        except:
+            pass
             
     try:
         matches = re.findall(r'(vmess|vless|ss|ssr|trojan|hysteria2|tuic)://', text)
-        if len(matches) > 0: return len(matches)
-    except: pass
+        if len(matches) > 0:
+            return len(matches)
+    except:
+        pass
         
     try:
         padded_text = text.strip() + "=" * ((4 - len(text.strip()) % 4) % 4)
         dec = base64.b64decode(padded_text).decode('utf-8', errors='ignore')
         matches = re.findall(r'(vmess|vless|ss|ssr|trojan|hysteria2|tuic)://', dec)
-        if len(matches) > 0: return len(matches)
-    except: pass
+        if len(matches) > 0:
+            return len(matches)
+    except:
+        pass
         
     return 0
 
@@ -126,45 +133,16 @@ def get_and_heal_tg_nodes():
     return clean_nodes
 
 def remove_dead_links_from_code(valid_urls):
+    """读取自身源码，替换 EXTERNAL_URLS 列表，实现自我进化"""
     try:
         with open(__file__, 'r', encoding='utf-8') as f:
             content = f.read()
 
         if not valid_urls:
-            new_list_str = "EXTERNAL_URLS = [
-    "https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/permanent/mihomo.yaml",
-    "https://raw.githubusercontent.com/clashv2ray-hub/v2rayfree/refs/heads/main/v2ray.txt",
-    "https://raw.githubusercontent.com/shaoyouvip/free/refs/heads/main/all.yaml",
-    "https://raw.githubusercontent.com/Pawdroid/Free-servers/refs/heads/main/sub",
-    "https://raw.githubusercontent.com/PuddinCat/BestClash/refs/heads/main/proxies.yaml",
-    "https://raw.githubusercontent.com/telegeam/freenode/refs/heads/master/v2ray.txt",
-    "https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/subdom.txt",
-    "https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/clab.yaml",
-    "https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.txt",
-    "https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.meta.yml",
-    "https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash",
-    "https://raw.githubusercontent.com/ripaojiedian/freenode/main/sub",
-    "https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/c.yaml",
-    "https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/v.txt"
-]"
+            new_list_str = "EXTERNAL_URLS = []"
         else:
             urls_formatted = ",\n    ".join([f'"{url}"' for url in valid_urls])
-            new_list_str = f"EXTERNAL_URLS = [
-    "https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/permanent/mihomo.yaml",
-    "https://raw.githubusercontent.com/clashv2ray-hub/v2rayfree/refs/heads/main/v2ray.txt",
-    "https://raw.githubusercontent.com/shaoyouvip/free/refs/heads/main/all.yaml",
-    "https://raw.githubusercontent.com/Pawdroid/Free-servers/refs/heads/main/sub",
-    "https://raw.githubusercontent.com/PuddinCat/BestClash/refs/heads/main/proxies.yaml",
-    "https://raw.githubusercontent.com/telegeam/freenode/refs/heads/master/v2ray.txt",
-    "https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/subdom.txt",
-    "https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/clab.yaml",
-    "https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.txt",
-    "https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.meta.yml",
-    "https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash",
-    "https://raw.githubusercontent.com/ripaojiedian/freenode/main/sub",
-    "https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/c.yaml",
-    "https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/v.txt"
-]"
+            new_list_str = f"EXTERNAL_URLS = [\n    {urls_formatted}\n]"
 
         new_content = re.sub(r'EXTERNAL_URLS\s*=\s*\[.*?\]', new_list_str, content, flags=re.DOTALL)
 
@@ -222,7 +200,6 @@ def get_dynamic_links():
                 files = [i for i in items if i['type'] == 'file' and i['name'] not in ('README.md', 'LICENSE', '.gitignore')]
                 files.sort(key=lambda x: x['name'], reverse=True)
                 
-                # 升级：允许从单个动态仓库抓取前 4 个有效文件 (完美适配 Jsnzkpg 仓库)
                 hit_count = 0
                 for file_info in files:
                     latest_url = file_info['download_url']
@@ -233,7 +210,7 @@ def get_dynamic_links():
                         dynamic_urls.append(latest_url)
                         repo_success = True
                         hit_count += 1
-                        if hit_count >= 4: # 最多抓4个防拥堵
+                        if hit_count >= 4: 
                             break 
         except Exception as e:
             pass
@@ -281,6 +258,7 @@ if __name__ == "__main__":
     
     all_urls = ["http://127.0.0.1:8000/tg_nodes.txt"] + valid_external_urls + dynamic_urls
     encoded_url = urllib.parse.quote("|".join(all_urls))
+    
     sub_api = f"http://127.0.0.1:25500/sub?target=clash&url={encoded_url}&insert=false"
     
     with open("sub_api_url.txt", "w") as f:
