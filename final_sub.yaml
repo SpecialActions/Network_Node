@@ -26,18 +26,14 @@ proxies:
     headers:
       Host: TABRIZ.NET
 - name: Internet_003
-  server: tinkered-pennies-puppies.freesocks.work
-  port: 443
-  type: ss
-  cipher: chacha20-ietf-poly1305
-  password: hbGrpfvNrJsUmKmPbR3iY2
+  server: 82.198.246.97
+  port: 180
+  type: vmess
+  uuid: d13fc2f5-3e05-4795-81eb-44143a09e552
+  alterId: 0
+  cipher: auto
+  tls: false
 - name: Internet_004
-  server: switcher-nick-croquet.freesocks.work
-  port: 443
-  type: ss
-  cipher: chacha20-ietf-poly1305
-  password: RFK38Cg7APneSB5cWDcpbm
-- name: Internet_005
   server: 2001:bc8:32d7:302::10
   port: 44579
   type: vmess
@@ -50,7 +46,7 @@ proxies:
     path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
     headers:
       Host: TURK1.NET.NET
-- name: Internet_006
+- name: Internet_005
   server: another.py.kawaii520.icu
   port: 443
   type: vmess
@@ -64,7 +60,7 @@ proxies:
     path: /another
     headers:
       Host: another-sg.kawaii520.icu
-- name: Internet_007
+- name: Internet_006
   server: another.py.kawaii520.icu
   port: 443
   type: vmess
@@ -78,7 +74,7 @@ proxies:
     path: /another
     headers:
       Host: another-de.kawaii520.icu
-- name: Internet_008
+- name: Internet_007
   server: another.py.kawaii520.icu
   port: 443
   type: vmess
@@ -92,7 +88,7 @@ proxies:
     path: /another
     headers:
       Host: another-zl.kawaii520.icu
-- name: Internet_009
+- name: Internet_008
   server: another.py.kawaii520.icu
   port: 443
   type: vmess
@@ -106,6 +102,19 @@ proxies:
     path: /another
     headers:
       Host: another-us.kawaii520.icu
+- name: Internet_009
+  server: 80.173.231.254
+  port: 12420
+  type: trojan
+  password: wp9IsiY82uQhcmgNC1eoBM
+  sni: www.semanticstaplegun.click
+- name: Internet_010
+  server: 58.152.25.253
+  port: 443
+  type: trojan
+  password: BxceQaOe
+  sni: t.me%2Fripaojiedian
+  skip-cert-verify: true
 proxy-groups:
 - name: 🚀 自动选择
   type: url-test
@@ -119,5 +128,6 @@ proxy-groups:
   - Internet_007
   - Internet_008
   - Internet_009
+  - Internet_010
   url: https://www.gstatic.com/generate_204
   interval: 3600
