@@ -24,13 +24,12 @@ if not raw_proxies:
     sys.exit(0)
 
 # ==========================================
-# 核心升级：全局精准去重 (剥离名称，比对底层配置)
+# 1. 全局精准去重
 # ==========================================
 proxies = []
 seen_hashes = set()
 
 for p in raw_proxies:
-    # 移除 'name' 字段再做哈希，这样即便两个节点名字不同但配置一样，也能被去重
     p_config = {k: v for k, v in p.items() if k != 'name'}
     config_str = json.dumps(p_config, sort_keys=True)
     config_hash = hashlib.md5(config_str.encode('utf-8')).hexdigest()
@@ -39,9 +38,8 @@ for p in raw_proxies:
         seen_hashes.add(config_hash)
         proxies.append(p)
 
-print(f"✅ 全局去重完毕: 抓取总计 {len(raw_proxies)} 个，去重后剩余 {len(proxies)} 个独立节点。")
+print(f"✅ 全局去重完毕: 抓取总计 {len(raw_proxies)} 个，去重后剩余 {len(proxies)} 个物理独立节点。")
 
-# 生成测速配置文件
 mihomo_config = {
     "allow-lan": True,
     "bind-address": "*",
@@ -57,39 +55,84 @@ time.sleep(3)
 
 valid_proxies = []
 
-def test_proxy(name):
+# ==========================================
+# 2. 测速机制
+# ==========================================
+MAX_DELAY = 2500 
+
+def test_proxy(name, retries=2):
     encoded_name = urllib.parse.quote(name)
-    # 严格测速，超过 2000ms 直接判死刑
-    test_url = f"http://127.0.0.1:9090/proxies/{encoded_name}/delay?timeout=2000&url=https://www.gstatic.com/generate_204"
-    try:
-        res = requests.get(test_url, timeout=3)
-        if res.status_code == 200 and "delay" in res.json():
-            return res.json()['delay']
-    except:
-        pass
+    test_url = f"http://127.0.0.1:9090/proxies/{encoded_name}/delay?timeout={MAX_DELAY}&url=https://www.gstatic.com/generate_204"
+    
+    for attempt in range(retries):
+        try:
+            res = requests.get(test_url, timeout=(MAX_DELAY/1000) + 1.5)
+            if res.status_code == 200 and "delay" in res.json():
+                delay = res.json()['delay']
+                if delay > 0:
+                    return delay
+        except:
+            pass
+        if attempt < retries - 1:
+            time.sleep(0.5)
+            
     return 0
 
-print("开始进行连通性测试...")
+print(f"开始进行【双重验证】连通性测试 (限时 {MAX_DELAY}ms)...")
 for p in proxies:
     original_name = p['name']
     delay = test_proxy(original_name)
-    if delay > 0:
+    
+    if 0 < delay <= MAX_DELAY:
         print(f"[✅ 保留] {original_name} - 延迟: {delay}ms")
         valid_proxies.append(p)
+    elif delay > MAX_DELAY:
+        print(f"[⚠️ 太慢剔除] {original_name} - 延迟: {delay}ms")
     else:
-        print(f"[❌ 删除] {original_name} - 测速不通")
+        print(f"[❌ 彻底死链] {original_name} - 测速超时或失效")
 
 process.terminate()
 
 # ==========================================
-# 统一重命名
+# 3. 智能归属地查询与重命名
 # ==========================================
-PREFIX = "Internet" # 👉 这里你可以随心所欲改成 "公益节点"、"VVIP" 等
-for index, p in enumerate(valid_proxies, start=1):
-    new_name = f"{PREFIX}_{index:03d}"
-    p['name'] = new_name
+print("\n正在查询节点 IP 归属地并重新命名...")
+country_counters = {}
+ip_cache = {} 
 
-# 生成最终配置
+def get_country(server):
+    if server in ip_cache:
+        return ip_cache[server]
+    try:
+        res = requests.get(f"http://ip-api.com/json/{server}?lang=zh-CN", timeout=3).json()
+        if res.get('status') == 'success':
+            country = res.get('country', '未知地区')
+            country = country.replace("中国香港", "香港").replace("中国台湾", "台湾").replace("中国澳门", "澳门").replace("美利坚合众国", "美国")
+            ip_cache[server] = country
+            time.sleep(0.1) 
+            return country
+    except:
+        pass
+    ip_cache[server] = '未知地区'
+    return '未知地区'
+
+for p in valid_proxies:
+    server = p.get('server', '')
+    country = get_country(server)
+    
+    if country not in country_counters:
+        country_counters[country] = 1
+    else:
+        country_counters[country] += 1
+        
+    # 👉 这里的格式已经修改为：国家名 + 空格 + 编号 (例如: 香港 01)
+    new_name = f"{country} {country_counters[country]:02d}"
+    p['name'] = new_name
+    print(f"  🏷️  重命名: {server} -> {new_name}")
+
+# ==========================================
+# 4. 生成最终配置文件
+# ==========================================
 final_output = {
     "proxies": valid_proxies,
     "proxy-groups": [
@@ -106,4 +149,4 @@ final_output = {
 with open("final_sub.yaml", "w", encoding='utf-8') as f:
     yaml.dump(final_output, f, allow_unicode=True, sort_keys=False)
     
-print(f"\n🎉 测速与重命名完成！最终保留有效节点 {len(valid_proxies)} 个。")
+print(f"\n🎉 测速与归属地重命名完成！最终保留极品节点 {len(valid_proxies)} 个。")
