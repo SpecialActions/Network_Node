@@ -31,47 +31,42 @@ jobs:
           sleep 5
           curl -4 ifconfig.me
 
-      - name: 1. Fetch Nodes & Build API (运行 fetch.py)
+      - name: 1. Fetch Nodes & Build API
         run: python fetch.py
 
       - name: 2. Setup Subconverter (MetaCubeX 终极版)
         run: |
-          # 直接拉取 MetaCubeX 官方维护的容器镜像，通杀 Hysteria2 / Vless 等一切新协议
           docker run -d --network host ghcr.io/metacubex/subconverter:latest
           sleep 5
           
-          # 启动本地服务使得 Subconverter 可以读取抓取到的 TG 节点
           python -m http.server 8000 &
           sleep 2
           
-          # 读取 fetch.py 动态生成的 API 链接并执行合并转换
           API_URL=$(cat sub_api_url.txt)
           curl -s "$API_URL" > clash_nodes.yaml
 
-      - name: 3. Setup Mihomo Core (准备内核)
+      - name: 3. Setup Mihomo Core
         run: |
           wget https://github.com/MetaCubeX/mihomo/releases/download/v1.18.3/mihomo-linux-amd64-v1.18.3.gz
           gunzip mihomo-linux-amd64-v1.18.3.gz
           mv mihomo-linux-amd64-v1.18.3 mihomo
           chmod +x mihomo
 
-      - name: 4. Dedup, Test and Rename (运行 check.py)
+      - name: 4. Dedup, Test and Rename
         run: python check.py
 
-      - name: 5. Generate Universal Base64 Subscription (生成通用订阅)
+      - name: 5. Generate Universal Base64 Subscription
         run: |
-          # 统一命名规范：输出为 final_sub.txt
           curl -s "http://127.0.0.1:25500/sub?target=mixed&url=http://127.0.0.1:8000/final_sub.yaml" > final_sub.txt
 
-      - name: 6. Commit and Push (保存所有格式的极速节点)
+      - name: 6. Commit and Push
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           
-          # 确保把生成的 final_sub.txt 和 自我进化的 fetch.py 都加入暂存区
           git add final_sub.yaml final_sub.txt tg_nodes.txt fetch.py
-          git commit -m "🚀 Auto update High-Speed nodes & Sublinks: $(date)" || echo "No changes to commit"
+          git commit -m "🚀 Auto update High-Speed nodes: $(date)" || echo "No changes to commit"
           
-          # 终极防冲突合并策略
-          git pull origin main --rebase=false -X ours || true
+          # 终极无敌防冲突策略：如果报错，再次 add 所有文件强制提交，彻底解决 modify/delete 冲突
+          git pull origin main --rebase=false -X ours || (git add tg_nodes.txt final_sub.yaml final_sub.txt fetch.py || true && git commit -m "Auto resolve merge conflicts" || true)
           git push
