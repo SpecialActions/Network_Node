@@ -1,9 +1,9 @@
-name: Fetch and Test Nodes
+name: Fetch and Test High-Speed Nodes
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # 每6小时运行一次
-  workflow_dispatch:      # 支持手动触发
+    - cron: '0 */6 * * *' # 每 6 小时自动执行
+  workflow_dispatch:      # 允许手动在网页点击触发
 
 jobs:
   run-all:
@@ -20,7 +20,7 @@ jobs:
       - name: Install Python Dependencies
         run: pip install requests pyyaml
 
-      - name: Setup Cloudflare WARP
+      - name: Setup Cloudflare WARP (抗封锁)
         run: |
           curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
@@ -31,45 +31,49 @@ jobs:
           sleep 5
           curl -4 ifconfig.me
 
-      - name: 1. Fetch Nodes & Build API (fetch.py)
+      - name: 1. Fetch Nodes & Build API (运行 fetch.py)
         run: python fetch.py
 
-      - name: 2. Setup Subconverter & Merge Nodes
+      - name: 2. Setup Subconverter & Merge Nodes (启动本地转换器)
         run: |
           wget https://github.com/tindy2013/subconverter/releases/latest/download/subconverter_linux64.tar.gz
           tar -zxvf subconverter_linux64.tar.gz
           ./subconverter/subconverter > /dev/null 2>&1 &
           sleep 2
           
-          # 开个本地端口把 TG 节点发给 Subconverter
+          # 启动本地服务使得 Subconverter 可以读取文件
           python -m http.server 8000 &
           sleep 1
           
-          # 读取 fetch 拼接好的指令
+          # 读取 fetch.py 动态生成的 API 链接并执行合并转换
           API_URL=$(cat sub_api_url.txt)
           curl "$API_URL" > clash_nodes.yaml
 
-      - name: 3. Setup Mihomo Core
+      - name: 3. Setup Mihomo Core (准备内核)
         run: |
           wget https://github.com/MetaCubeX/mihomo/releases/download/v1.18.3/mihomo-linux-amd64-v1.18.3.gz
           gunzip mihomo-linux-amd64-v1.18.3.gz
           mv mihomo-linux-amd64-v1.18.3 mihomo
           chmod +x mihomo
 
-      - name: 4. Dedup, Test and Rename (check.py)
+      - name: 4. Dedup, Test and Rename (运行 check.py)
         run: python check.py
 
-      - name: 5. Commit and Push (保存极速节点)
+      # 🌟 新增阶段：将测速完的优质节点转换成通用 Base64 订阅方案
+      - name: 5. Generate Universal Base64 Subscription (生成通用订阅)
+        run: |
+          # 调用后端的 Subconverter，将 final_sub.yaml 反向输出为全平台通用的 mixed Base64 格式
+          curl "http://127.0.0.1:25500/sub?target=mixed&url=http://127.0.0.1:8000/final_sub.yaml" > sub.txt
+
+      - name: 6. Commit and Push (保存所有格式的极速节点)
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           
-          # 把所有可能变动的文件加入暂存区
-          git add final_sub.yaml tg_nodes.txt fetch.py
+          # 把生成的 sub.txt 也加入到暂存区
+          git add final_sub.yaml sub.txt tg_nodes.txt fetch.py
           git commit -m "🚀 Auto update High-Speed nodes: $(date)" || echo "No changes to commit"
           
-          # 核心防撞装甲：拉取云端代码。如果出现冲突，无条件保留本地刚刚测好的文件 (-X ours)
+          # 终极防冲突合并策略
           git pull origin main --rebase=false -X ours || true
-          
-          # 强力推送到云端
           git push
