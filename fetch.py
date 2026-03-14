@@ -4,40 +4,68 @@ import base64
 import urllib.parse
 import json
 import hashlib
+import yaml
 from datetime import datetime, timedelta, timezone
 
-# 1. TG 频道源
+# ==========================================
+# 1. 订阅源配置
+# ==========================================
 CHANNELS = [
     'https://t.me/s/proxygogogo',
     'https://t.me/s/freekankan',
     'https://t.me/s/freeVPNjd'
 ]
 
-# 2. 固定的外部订阅源
 EXTERNAL_URLS = [
     "https://nodesfree.github.io/v2raynode/subscribe/v2ray.txt",
-    "https://nodesfree.github.io/v2raynode/v2ray.txt",
     "https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/permanent/mihomo.yaml",
     "https://raw.githubusercontent.com/clashv2ray-hub/v2rayfree/refs/heads/main/v2ray.txt",
     "https://raw.githubusercontent.com/shaoyouvip/free/refs/heads/main/all.yaml",
-    "https://proxy.v2gh.com/https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub",
-    "https://mirror.v2gh.com/https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub"
+    "https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub"
 ]
 
+DYNAMIC_REPOS = [
+    "free-nodes/v2rayfree", 
+    "free-nodes/clashfree"
+]
+
+# ==========================================
+# 2. 核心探测与统计函数
+# ==========================================
+def count_nodes_in_text(text, is_yaml=False):
+    """尝试解析文本并统计节点数量"""
+    try:
+        if is_yaml:
+            data = yaml.safe_load(text)
+            if isinstance(data, dict) and 'proxies' in data:
+                return len(data['proxies'])
+        else:
+            # 尝试 Base64 解码
+            try:
+                dec = base64.b64decode(text).decode('utf-8', errors='ignore')
+                return len(re.findall(r'(vmess|vless|ss|ssr|trojan|hysteria2)://', dec))
+            except:
+                # 明文匹配
+                return len(re.findall(r'(vmess|vless|ss|ssr|trojan|hysteria2)://', text))
+    except:
+        pass
+    return 0
+
 def get_and_heal_tg_nodes():
-    """
-    抓取并净化野生 TG 节点
-    """
+    print("\n" + "="*50)
+    print("📡 阶段 1: 抓取 Telegram 频道野生节点")
+    print("="*50)
     raw_nodes = []
     raw_pattern = re.compile(r'(vmess|vless|ss|ssr|trojan|hysteria2)://[^\s\'"<>]+')
     sub_pattern = re.compile(r'https?://[^\s\'"<>]+')
     
     for url in CHANNELS:
         try:
-            print(f"正在抓取 TG频道: {url}")
             res = requests.get(url, timeout=10).text
+            channel_count = 0
             for m in raw_pattern.finditer(res):
                 raw_nodes.append(m.group(0))
+                channel_count += 1
             for m in sub_pattern.finditer(res):
                 sub_url = m.group(0)
                 if "t.me" in sub_url: continue 
@@ -46,70 +74,82 @@ def get_and_heal_tg_nodes():
                     decoded = base64.b64decode(sub_res).decode('utf-8', errors='ignore')
                     for rm in raw_pattern.finditer(decoded):
                         raw_nodes.append(rm.group(0))
-                except:
-                    pass 
+                        channel_count += 1
+                except: pass 
+            print(f"  [✅ 成功] 获取 {channel_count:3} 个节点 <- {url}")
         except Exception as e:
-            print(f"抓取失败 {url}: {e}")
+            print(f"  [❌ 失败] 无法访问 <- {url}")
 
-    # ==========================================
-    # 核心修复：野生节点净化中心
-    # ==========================================
+    # 野生节点净化中心
     clean_nodes = []
     seen_configs = set()
-
     for node in raw_nodes:
         try:
             if node.startswith("vmess://"):
-                # 修复 Vmess：强行砍掉违规的 # 备注，补齐 Base64 等号
                 b64_str = node[8:].split('#')[0] 
                 b64_str += "=" * ((4 - len(b64_str) % 4) % 4)
                 v_json = json.loads(base64.b64decode(b64_str).decode('utf-8'))
-                
-                # 提前进行 TG 节点间的去重，减轻后续压力
                 v_config = {k: v for k, v in v_json.items() if k != 'ps'}
                 config_hash = hashlib.md5(str(v_config).encode()).hexdigest()
                 if config_hash in seen_configs: continue
                 seen_configs.add(config_hash)
-                
-                # 重新打包成完全合规的 vmess 链接
                 clean_node = "vmess://" + base64.b64encode(json.dumps(v_json, separators=(',', ':')).encode('utf-8')).decode('utf-8')
                 clean_nodes.append(clean_node)
             else:
-                # 修复其他协议：确保名字部分经过标准 URL 编码，防止 Subconverter 读断
                 parts = node.split('#', 1)
                 config_part = parts[0]
-                
                 config_hash = hashlib.md5(config_part.encode()).hexdigest()
                 if config_hash in seen_configs: continue
                 seen_configs.add(config_hash)
-                
                 if len(parts) > 1:
                     safe_name = urllib.parse.quote(urllib.parse.unquote(parts[1]))
                     clean_nodes.append(f"{config_part}#{safe_name}")
                 else:
                     clean_nodes.append(config_part)
-        except Exception:
-            # 遇到彻底损坏无法抢救的节点，静默丢弃
-            continue
-            
+        except: continue
+        
+    print(f"  --> 净化与初步去重后，TG 频道共保留 {len(clean_nodes)} 个有效节点。")
     return clean_nodes
 
+def check_external_links():
+    print("\n" + "="*50)
+    print("🔗 阶段 2: 探测固定外部订阅源")
+    print("="*50)
+    valid_urls = []
+    
+    for url in EXTERNAL_URLS:
+        is_yaml = url.endswith('.yaml') or url.endswith('.yml')
+        try:
+            res = requests.get(url, timeout=10)
+            if res.status_code == 200:
+                count = count_nodes_in_text(res.text, is_yaml)
+                if count > 0:
+                    print(f"  [✅ 存活] 发现 {count:3} 个节点 <- {url}")
+                    valid_urls.append(url)
+                else:
+                    print(f"  [⚠️ 空链] 未发现节点 <- {url}")
+            else:
+                print(f"  [❌ 报错] HTTP {res.status_code} <- {url}")
+        except Exception as e:
+            print(f"  [❌ 超时] 无法连接 <- {url}")
+            
+    return valid_urls
+
 def get_dynamic_links():
-    """
-    主动出击探测：基于当前日期生成 datePath 探测动态节点文件
-    """
+    print("\n" + "="*50)
+    print("📅 阶段 3: 智能嗅探日期动态仓库 (${datePath})")
+    print("="*50)
     dynamic_urls = []
-    tz = timezone(timedelta(hours=8)) # 东八区时间
+    tz = timezone(timedelta(hours=8)) 
     today = datetime.now(tz)
     yesterday = today - timedelta(days=1)
-
-    REPOS = ["free-nodes/v2rayfree", "free-nodes/clashfree"]
+    found_repos = set()
     
-    print("开始根据日期 ${datePath} 探测动态节点文件...")
     for date_obj in [today, yesterday]:
         date_path = date_obj.strftime("%Y/%m/%Y%m%d")
-        
-        for repo in REPOS:
+        for repo in DYNAMIC_REPOS:
+            if repo in found_repos: continue # 找到了今天的文件就不找昨天的了
+            
             possible_paths = [
                 f"node_list/{date_path}.yaml",
                 f"node_list/{date_path}.txt",
@@ -119,37 +159,46 @@ def get_dynamic_links():
             for path in possible_paths:
                 test_url = f"https://raw.githubusercontent.com/{repo}/main/{path}"
                 try:
-                    if requests.head(test_url, timeout=3).status_code == 200:
-                        dynamic_urls.append(test_url)
-                        print(f"  -> ✅ 成功锁定文件: {test_url}")
-                        break 
-                except:
-                    pass
-    return list(set(dynamic_urls))
+                    # 为了统计数量，这里使用 GET 而不是 HEAD
+                    res = requests.get(test_url, timeout=5)
+                    if res.status_code == 200:
+                        is_yaml = test_url.endswith('.yaml')
+                        count = count_nodes_in_text(res.text, is_yaml)
+                        if count > 0:
+                            print(f"  [✅ 命中] 发现 {count:3} 个节点 <- {test_url}")
+                            dynamic_urls.append(test_url)
+                            found_repos.add(repo)
+                            break 
+                except: pass
+                
+    return dynamic_urls
 
 if __name__ == "__main__":
-    # 1. 抓取并【净化】TG 节点
+    # 执行三大阶段
     tg_nodes = get_and_heal_tg_nodes()
+    valid_external_urls = check_external_links()
+    dynamic_urls = get_dynamic_links()
+    
+    print("\n" + "="*50)
+    print("🚀 阶段 4: 资源聚合与下发")
+    print("="*50)
+    
+    # 保存 TG 节点给 Subconverter 读取
     if tg_nodes:
         final_string = "\n".join(tg_nodes)
         b64_content = base64.b64encode(final_string.encode('utf-8')).decode('utf-8')
         with open("tg_nodes.txt", "w", encoding='utf-8') as f:
             f.write(b64_content)
-        print(f"✅ TG 频道抓取与修复完毕，提取了 {len(tg_nodes)} 个合规节点。")
     else:
         with open("tg_nodes.txt", "w") as f: f.write("")
-        print("⚠️ 未抓取到任何有效的 TG 节点。")
     
-    # 2. 探测动态仓库链接
-    dynamic_urls = get_dynamic_links()
-    
-    # 3. 合并所有订阅源 (本地净化 TG + 固定源 + 动态解析源)
-    all_urls = ["http://127.0.0.1:8000/tg_nodes.txt"] + EXTERNAL_URLS + dynamic_urls
-    
-    # 组合为 Subconverter 专用指令
+    # 核心：只把【确认存活且有节点】的链接交给 Subconverter
+    all_urls = ["http://127.0.0.1:8000/tg_nodes.txt"] + valid_external_urls + dynamic_urls
     encoded_url = urllib.parse.quote("|".join(all_urls))
     sub_api = f"http://127.0.0.1:25500/sub?target=clash&url={encoded_url}&insert=false"
     
     with open("sub_api_url.txt", "w") as f:
         f.write(sub_api)
-    print(f"\n🎉 资源聚合完毕！总计包含 {len(all_urls)} 个订阅入口，API指令已生成。")
+        
+    print(f"  --> 剔除死链后，最终下发给 Subconverter 的有效订阅入口: {len(all_urls)} 个。")
+    print("  --> 等待 check.py 进行全局底层去重与极速测速...\n")
