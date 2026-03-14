@@ -32,20 +32,12 @@ proxies:
   cipher: chacha20-ietf-poly1305
   password: hbGrpfvNrJsUmKmPbR3iY2
 - name: Internet_004
-  server: 82.198.246.97
-  port: 180
-  type: vmess
-  uuid: d13fc2f5-3e05-4795-81eb-44143a09e552
-  alterId: 0
-  cipher: auto
-  tls: false
-- name: Internet_005
   server: switcher-nick-croquet.freesocks.work
   port: 443
   type: ss
   cipher: chacha20-ietf-poly1305
   password: RFK38Cg7APneSB5cWDcpbm
-- name: Internet_006
+- name: Internet_005
   server: 2001:bc8:32d7:302::10
   port: 44579
   type: vmess
@@ -58,18 +50,62 @@ proxies:
     path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
     headers:
       Host: TURK1.NET.NET
-- name: Internet_007
-  server: 141.98.101.182
+- name: Internet_006
+  server: another.py.kawaii520.icu
   port: 443
-  type: ss
-  cipher: aes-128-gcm
-  password: shadowsocks
+  type: vmess
+  uuid: d150ba57-67b9-4eae-b18f-0e956ee9c075
+  alterId: 0
+  cipher: auto
+  tls: true
+  servername: another-sg.kawaii520.icu
+  network: ws
+  ws-opts:
+    path: /another
+    headers:
+      Host: another-sg.kawaii520.icu
+- name: Internet_007
+  server: another.py.kawaii520.icu
+  port: 443
+  type: vmess
+  uuid: d150ba57-67b9-4eae-b18f-0e956ee9c075
+  alterId: 0
+  cipher: auto
+  tls: true
+  servername: another-de.kawaii520.icu
+  network: ws
+  ws-opts:
+    path: /another
+    headers:
+      Host: another-de.kawaii520.icu
 - name: Internet_008
-  server: 80.173.231.254
-  port: 12420
-  type: trojan
-  password: wp9IsiY82uQhcmgNC1eoBM
-  sni: www.semanticstaplegun.click
+  server: another.py.kawaii520.icu
+  port: 443
+  type: vmess
+  uuid: d150ba57-67b9-4eae-b18f-0e956ee9c075
+  alterId: 0
+  cipher: auto
+  tls: true
+  servername: another-zl.kawaii520.icu
+  network: ws
+  ws-opts:
+    path: /another
+    headers:
+      Host: another-zl.kawaii520.icu
+- name: Internet_009
+  server: another.py.kawaii520.icu
+  port: 443
+  type: vmess
+  uuid: d150ba57-67b9-4eae-b18f-0e956ee9c075
+  alterId: 0
+  cipher: auto
+  tls: true
+  servername: another-us.kawaii520.icu
+  network: ws
+  ws-opts:
+    path: /another
+    headers:
+      Host: another-us.kawaii520.icu
 proxy-groups:
 - name: 🚀 自动选择
   type: url-test
@@ -82,5 +118,6 @@ proxy-groups:
   - Internet_006
   - Internet_007
   - Internet_008
+  - Internet_009
   url: https://www.gstatic.com/generate_204
   interval: 3600
