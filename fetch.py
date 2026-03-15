@@ -41,8 +41,6 @@ def get_local_nodes_urls():
     for filename in os.listdir(NODES_DIR):
         filepath = os.path.join(NODES_DIR, filename)
         if os.path.isfile(filepath):
-            # 巧妙利用我们在 GitHub Action 中启动的本地 HTTP 服务器 (8000端口)
-            # 直接把 Nodes 文件夹里的配置文件以 HTTP 链接的形式喂给 Subconverter
             safe_name = urllib.parse.quote(filename)
             local_url = f"http://127.0.0.1:8000/{NODES_DIR}/{safe_name}"
             local_urls.append(local_url)
@@ -52,7 +50,6 @@ def get_local_nodes_urls():
     return local_urls
 
 def count_nodes_in_text(text, is_yaml=False):
-    """智能统计文本中的节点数量（兼容 YAML 和 Base64）"""
     if is_yaml or 'proxies:' in text:
         try:
             data = yaml.safe_load(text)
@@ -133,13 +130,13 @@ def get_and_heal_tg_nodes():
     print(f"  --> 净化与初步去重后，TG 频道共保留 {len(clean_nodes)} 个有效节点。")
     return clean_nodes
 
-def check_external_links():
+def check_external_links(urls_to_check):
     print("\n" + "="*50)
-    print("🔗 阶段 2: 探测固定外部订阅源 (只标记，不修改)")
+    print("🔗 阶段 2: 探测外部订阅源")
     print("="*50)
     valid_urls = []
     
-    for url in EXTERNAL_URLS:
+    for url in urls_to_check:
         is_yaml = url.endswith('.yaml') or url.endswith('.yml') or '/clash' in url or 'proxies' in url
         try:
             res = requests.get(url, timeout=10)
@@ -149,11 +146,11 @@ def check_external_links():
                     print(f"  [✅ 存活] 发现 {count:3} 个节点 <- {url}")
                     valid_urls.append(url)
                 else:
-                    print(f"  [⚠️ 空链] 未发现节点，标记失效跳过 <- {url}")
+                    print(f"  [⚠️ 空链] 未发现节点，将被自动清理 <- {url}")
             else:
-                print(f"  [❌ 报错] HTTP {res.status_code}，标记失效跳过 <- {url}")
+                print(f"  [❌ 报错] HTTP {res.status_code}，将被自动清理 <- {url}")
         except Exception as e:
-            print(f"  [❌ 超时/异常] 无法连接，标记失效跳过 <- {url}")
+            print(f"  [❌ 超时/异常] 无法连接，将被自动清理 <- {url}")
             
     return valid_urls
 
@@ -215,13 +212,28 @@ def get_dynamic_links():
 if __name__ == "__main__":
     local_nodes_urls = get_local_nodes_urls()
     tg_nodes = get_and_heal_tg_nodes()
-    valid_external_urls = check_external_links()
+    
+    valid_external_urls = check_external_links(EXTERNAL_URLS)
+    
+    if len(valid_external_urls) != len(EXTERNAL_URLS):
+        try:
+            with open("sources.yaml", "r", encoding="utf-8") as f:
+                config_data = yaml.safe_load(f)
+            # 替换为仅存活的链接
+            config_data["EXTERNAL_URLS"] = valid_external_urls
+            with open("sources.yaml", "w", encoding="utf-8") as f:
+                yaml.dump(config_data, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
+            print(f"\n  [♻️ 配置自我净化] 成功！已从 sources.yaml 中永久删除了 {len(EXTERNAL_URLS) - len(valid_external_urls)} 个失效链接！")
+        except Exception as e:
+            print(f"  [⚠️ 配置净化失败] {e}")
+
     dynamic_urls = get_dynamic_links()
     
     print("\n" + "="*50)
     print("🚀 阶段 4: 资源聚合与下发")
     print("="*50)
     
+    # 依然会生成 tg_nodes.txt 供本次测速使用，但工作流不再把它提交到 Git 中
     if tg_nodes:
         final_string = "\n".join(tg_nodes)
         b64_content = base64.b64encode(final_string.encode('utf-8')).decode('utf-8')
@@ -230,7 +242,6 @@ if __name__ == "__main__":
     else:
         with open("tg_nodes.txt", "w") as f: f.write("")
     
-    # 汇总所有合法的 URL，包括 Nodes 文件夹里的本地文件
     all_urls = []
     if tg_nodes:
         all_urls.append("http://127.0.0.1:8000/tg_nodes.txt")
