@@ -6,7 +6,7 @@ name: 🚀 Auto Update Network Nodes
 on:
   workflow_dispatch: # 允许在网页端手动点击 "Run workflow" 运行
   schedule:
-    - cron: '0 0 * * *' # 每天自动运行一次 (UTC时间0点，即北京时间早上8点)
+    - cron: '0 */3 * * *' # 每 3 小时自动执行
   push:
     paths:
       - 'sources.yaml'   # 当你修改这个配置文件时自动触发
