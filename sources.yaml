@@ -17,7 +17,6 @@ EXTERNAL_URLS:
 - https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash
 - https://raw.githubusercontent.com/ripaojiedian/freenode/main/sub
 - https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/c.yaml
-- https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/v.txt
 - https://beacon-api.ssdxz.cn/sub?token=b7013ff726878124d363c1680f59de74&b64
 - https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/proxy_configs.txt
 - https://gist.githubusercontent.com/shuaidaoya/9e5cf2749c0ce79932dd9229d9b4162b/raw/base64.txt
