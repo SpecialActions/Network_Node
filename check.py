@@ -5,6 +5,7 @@ import urllib.parse
 import json
 import hashlib
 import yaml
+from datetime import datetime, timedelta, timezone
 
 # ==========================================
 # 1. 订阅源配置
@@ -15,7 +16,7 @@ CHANNELS = [
     'https://t.me/s/freeVPNjd'
 ]
 
-# 引入了你提供的所有宝藏节点库，采用绝对安全的写死列表
+# 引入了你提供的所有宝藏节点库，已补齐 4n0nymou3 的全套套餐！
 EXTERNAL_URLS = [
     "https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/permanent/mihomo.yaml",
     "https://raw.githubusercontent.com/clashv2ray-hub/v2rayfree/refs/heads/main/v2ray.txt",
@@ -49,24 +50,30 @@ DYNAMIC_REPOS = [
 # 2. 核心探测与统计函数
 # ==========================================
 def count_nodes_in_text(text, is_yaml=False):
+    """智能统计文本中的节点数量（兼容无扩展名的 YAML 和 Base64）"""
     if is_yaml or 'proxies:' in text:
         try:
             data = yaml.safe_load(text)
             if isinstance(data, dict) and 'proxies' in data:
                 return len(data['proxies'])
-        except: pass
+        except:
+            pass
             
     try:
         matches = re.findall(r'(vmess|vless|ss|ssr|trojan|hysteria2|tuic)://', text)
-        if len(matches) > 0: return len(matches)
-    except: pass
+        if len(matches) > 0:
+            return len(matches)
+    except:
+        pass
         
     try:
         padded_text = text.strip() + "=" * ((4 - len(text.strip()) % 4) % 4)
         dec = base64.b64decode(padded_text).decode('utf-8', errors='ignore')
         matches = re.findall(r'(vmess|vless|ss|ssr|trojan|hysteria2|tuic)://', dec)
-        if len(matches) > 0: return len(matches)
-    except: pass
+        if len(matches) > 0:
+            return len(matches)
+    except:
+        pass
         
     return 0
 
@@ -129,11 +136,33 @@ def get_and_heal_tg_nodes():
     print(f"  --> 净化与初步去重后，TG 频道共保留 {len(clean_nodes)} 个有效节点。")
     return clean_nodes
 
+def remove_dead_links_from_code(valid_urls):
+    """读取自身源码，替换 EXTERNAL_URLS 列表，实现自我进化"""
+    try:
+        with open(__file__, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        if not valid_urls:
+            new_list_str = "EXTERNAL_URLS = []"
+        else:
+            urls_formatted = ",\n    ".join([f'"{url}"' for url in valid_urls])
+            new_list_str = f"EXTERNAL_URLS = [\n    {urls_formatted}\n]"
+
+        new_content = re.sub(r'EXTERNAL_URLS\s*=\s*\[.*?\]', new_list_str, content, flags=re.DOTALL)
+
+        if new_content != content:
+            with open(__file__, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print("\n  [♻️ 源码净化] 脚本已自我修改，永久删除了失效的链接！")
+    except Exception as e:
+        print(f"\n  [⚠️ 源码净化失败] {e}")
+
 def check_external_links():
     print("\n" + "="*50)
-    print("🔗 阶段 2: 探测固定外部订阅源 (安全稳固版)")
+    print("🔗 阶段 2: 探测固定外部订阅源 (包含最新加入的仓库)")
     print("="*50)
     valid_urls = []
+    dead_urls = []
     
     for url in EXTERNAL_URLS:
         is_yaml = url.endswith('.yaml') or url.endswith('.yml') or '/clash' in url or 'proxies' in url
@@ -145,12 +174,18 @@ def check_external_links():
                     print(f"  [✅ 存活] 发现 {count:3} 个节点 <- {url}")
                     valid_urls.append(url)
                 else:
-                    print(f"  [⚠️ 空链] 未发现节点 <- {url} (跳过)")
+                    print(f"  [⚠️ 空链] 未发现节点 <- {url} (标记为死链)")
+                    dead_urls.append(url)
             else:
-                print(f"  [❌ 报错] HTTP {res.status_code} <- {url} (跳过)")
+                print(f"  [❌ 报错] HTTP {res.status_code} <- {url} (标记为死链)")
+                dead_urls.append(url)
         except Exception as e:
-            print(f"  [❌ 超时] 无法连接 <- {url} (跳过)")
+            print(f"  [❌ 超时] 无法连接 <- {url} (标记为死链)")
+            dead_urls.append(url)
 
+    if dead_urls:
+        remove_dead_links_from_code(valid_urls)
+            
     return valid_urls
 
 def get_dynamic_links():
@@ -233,5 +268,5 @@ if __name__ == "__main__":
     with open("sub_api_url.txt", "w") as f:
         f.write(sub_api)
         
-    print(f"  --> 聚合完毕，最终下发给 Subconverter 的入口: {len(all_urls)} 个。")
+    print(f"  --> 剔除死链后，最终下发给 Subconverter 的有效订阅入口: {len(all_urls)} 个。")
     print("  --> 等待 check.py 进行全局底层去重与极速测速...\n")
