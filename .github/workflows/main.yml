@@ -57,11 +57,11 @@ jobs:
 
       - name: 5. Generate Universal Base64 Subscription (生成通用订阅)
         run: |
-          # 🌟 核心修复：重新唤醒 HTTP 服务，防止被上一环节的 GitHub 系统杀后台
+          # 🌟 核心修复：先杀掉可能残留的进程，防止端口冲突，然后再重新唤醒 HTTP 服务
+          fuser -k 8000/tcp || true
           python -m http.server 8000 &
           sleep 2
           
-          # 这次 Subconverter 就能顺畅读到刚刚出炉的 final_sub.yaml 了！
           curl -s "http://127.0.0.1:25500/sub?target=mixed&url=http://127.0.0.1:8000/final_sub.yaml" > final_sub.txt
 
       - name: 6. Commit and Push (保存所有格式的极速节点)
