@@ -46,14 +46,13 @@ jobs:
             fi
           fi
 
-      - name: 🚀 采集并从外部配置加载源
+      - name: 🚀 采集并从外部配置加载 Git 源
         shell: bash
         run: |
           TARGET_DIR="Nodes"
           smart_move() {
               local src="$1"
               local base_name=$(basename "$2")
-              base_name="${base_name%%\?*}"
               local name="${base_name%.*}"
               local ext="${base_name##*.}"
               if [[ "$name" == "$ext" ]]; then ext_dot=""; else ext_dot=".$ext"; fi
@@ -71,54 +70,39 @@ jobs:
             exit 1
           fi
 
-          # 1. 导出全局配置 (后续跨仓库推送可以使用这些变量)
-          export OUT_REPO=$(yq -r '.TARGET_REPO' sources.yaml)
-          export OUT_DIR=$(yq -r '.TARGET_DIR' sources.yaml)
-          echo "📦 目标输出仓库: $OUT_REPO 目录: $OUT_DIR"
-
-          # 2. 读取各类型数据源
           mapfile -t repos < <(yq -r '.REPOS[] // empty' sources.yaml)
-          mapfile -t external_urls < <(yq -r '.EXTERNAL_URLS[] // empty' sources.yaml)
-          mapfile -t channels < <(yq -r '.CHANNELS[] // empty' sources.yaml)
+          
+          echo "✅ 成功从 sources.yaml 加载了 ${#repos[@]} 个源。"
 
-          # 3. 处理 Git 仓库和目录 (REPOS)
           for url in "${repos[@]}"; do
-            echo "🔄 正在克隆或抓取: $url"
-            repo_url_part=$(echo "$url" | sed -E 's|https://github.com/([^/]+/[^/]+).*|\1|')
-            repo_name="${repo_url_part%.git}"
-            rm -rf temp/clone && mkdir -p temp/clone
-            
-            if [[ "$url" == *"/tree/"* ]]; then
-                branch=$(echo "$url" | sed -E 's|.*/tree/([^/]+).*|\1|')
-                repo_subpath=$(echo "$url" | sed -E "s|.*/tree/$branch/||")
-            else
-                branch="main"; repo_subpath=""
-            fi
-            
-            if git clone --depth=1 -b "$branch" "https://github.com/${repo_name}.git" temp/clone 2>/dev/null; then
-                search_path="temp/clone/$repo_subpath"
-                if [ -d "$search_path" ]; then
-                    find "$search_path" -maxdepth 1 -type f | while read -r file; do
-                        smart_move "$file" "$(basename "$file")"
-                    done
+            echo "🔄 正在处理: $url"
+            if [[ "$url" == *".git" ]] || [[ "$url" == *"/tree/"* ]]; then
+                repo_url_part=$(echo "$url" | sed -E 's|https://github.com/([^/]+/[^/]+).*|\1|')
+                repo_name="${repo_url_part%.git}"
+                rm -rf temp/clone && mkdir -p temp/clone
+                if [[ "$url" == *"/tree/"* ]]; then
+                    branch=$(echo "$url" | sed -E 's|.*/tree/([^/]+).*|\1|')
+                    repo_subpath=$(echo "$url" | sed -E "s|.*/tree/$branch/||")
+                else
+                    branch="main"; repo_subpath=""
                 fi
+                if git clone --depth=1 -b "$branch" "https://github.com/${repo_name}.git" temp/clone 2>/dev/null; then
+                    search_path="temp/clone/$repo_subpath"
+                    if [ -d "$search_path" ]; then
+                        find "$search_path" -maxdepth 1 -type f | while read -r file; do
+                            smart_move "$file" "$(basename "$file")"
+                        done
+                    fi
+                fi
+                continue
             fi
-          done
-
-          # 4. 处理直链下载 (EXTERNAL_URLS)
-          for url in "${external_urls[@]}"; do
-            echo "⬇️ 正在下载直链: $url"
+            
             [[ "$url" == *"/blob/"* ]] && url=$(echo "$url" | sed 's|github.com|raw.githubusercontent.com|;s|/blob/|/|')
             filename=$(basename "$url")
             if curl -L -s -f "$url" -o "temp/single_file"; then
               smart_move "temp/single_file" "$filename"
-            else
-              echo "⚠️ 下载失败: $url"
             fi
           done
-
-          # 5. 关于 TG 频道的提示
-          echo "📢 注意：检测到 ${#channels[@]} 个 Telegram 频道。当前纯 bash 环境只负责下载，如需抓取 TG 节点，请确保后续触发的工作流 (如 main to B.yml) 包含相关爬虫代码。"
 
       - name: 提交并推送
         run: |
