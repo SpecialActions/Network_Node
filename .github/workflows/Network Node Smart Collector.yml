@@ -72,7 +72,7 @@ jobs:
 
           mapfile -t repos < <(yq -r '.REPOS[] // empty' sources.yaml)
           
-          echo "✅ 成功从 sources.yaml 加载了 ${#repos[@]} 个源。"
+          echo "✅ 成功从 sources.yaml 加载了 ${#repos[@]} 个源，开始处理..."
 
           for url in "${repos[@]}"; do
             echo "🔄 正在处理: $url"
