@@ -15,6 +15,7 @@ REPOS:
   - "https://github.com/Jsnzkpg/Jsnzkpg.git"
   - "https://github.com/free-nodes/v2rayfree.git"
   - "https://github.com/free-nodes/clashfree.git"
+  - "https://github.com/snakem982/proxypool/tree/main/source"
 
 # 2. 外部单文件直链
 EXTERNAL_URLS:
@@ -35,11 +36,26 @@ EXTERNAL_URLS:
   - https://beacon-api.ssdxz.cn/sub?token=b7013ff726878124d363c1680f59de74&b64
   - https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/proxy_configs.txt
   - https://gist.githubusercontent.com/shuaidaoya/9e5cf2749c0ce79932dd9229d9b4162b/raw/base64.txt
+  - https://xmxosfepggzm.503403.xyz
 
 # 3. 动态日期订阅源
 DATE_TEMPLATES:
   - https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.yml
   - https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.txt
+  - https://yoyapai.com/mianfeijiedian/{YYYYMMDD}-clashvpn-mfjiedian-yoyapai.com.yaml
+  - https://yoyapai.com/mianfeijiedian/{YYYYMMDD}-ssr-v2rayvpn-jiedian-yoyapai.com.txt
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/0-{YYYYMMDD}.yaml
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/1-{YYYYMMDD}.yaml
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/2-{YYYYMMDD}.yaml
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/3-{YYYYMMDD}.yaml
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/4-{YYYYMMDD}.yaml
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/0-{YYYYMMDD}.txt
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/1-{YYYYMMDD}.txt
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/2-{YYYYMMDD}.txt
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/3-{YYYYMMDD}.txt
+  - https://node.freeclashnode.com/uploads/{YYYY}/{MM}/4-{YYYYMMDD}.txt
+  - http://stairnode.cczzuu.top/node/{YYYYMMDD}-v2ray.txt
+  - http://stairnode.cczzuu.top/node/{YYYYMMDD}-clash.yaml
 
 # 4. Telegram 频道订阅源 
 CHANNELS:
