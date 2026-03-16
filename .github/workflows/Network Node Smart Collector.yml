@@ -2,7 +2,7 @@ name: 📦 Network Node Smart Collector
 
 permissions:
   contents: write
-  actions: write # 必须添加此权限才能触发其他工作流
+  actions: write # 必须开启此权限才能触发其他工作流
 
 concurrency:
   group: node-collector-${{ github.ref }}
@@ -14,7 +14,7 @@ on:
     paths:
       - '.github/workflows/Network Node Smart Collector.yml'
   schedule:
-    - cron: '0 */3 * * *'
+    - cron: '0 */8 * * *'
 
 jobs:
   collect:
@@ -22,7 +22,7 @@ jobs:
     env:
       CLEAN_BEFORE_PULL: true 
       CLEAN_OLD_FILES: true
-      GH_TOKEN: ${{ github.token }} # 用于执行 gh 命令
+      GH_TOKEN: ${{ github.token }} # 预装的 GitHub CLI 工具所需 Token
 
     steps:
       - name: Checkout 仓库内容
@@ -35,11 +35,12 @@ jobs:
           mkdir -p Nodes
           mkdir -p temp/clone
           if [ "${{ env.CLEAN_BEFORE_PULL }}" = "true" ]; then
-            echo "🧹 模式：正在清空 Nodes 目录..."
+            echo "🧹 模式：正在彻底清空 Nodes 目录..."
             rm -rf Nodes/*
           fi
           if [ "${{ env.CLEAN_OLD_FILES }}" = "true" ]; then
-            if [ "$(ls -A Nodes)" ]; then
+            if [ "$(ls -A Nodes 2>/dev/null)" ]; then
+              echo "📆 模式：正在清理 7 天前的旧文件..."
               find Nodes -type f -mtime +7 -delete || true
             fi
           fi
@@ -71,6 +72,7 @@ jobs:
           )
 
           for url in "${repos[@]}"; do
+            echo "🔄 正在处理: $url"
             if [[ "$url" == *".git" ]] || [[ "$url" == *"/tree/"* ]]; then
                 repo_url_part=$(echo "$url" | sed -E 's|https://github.com/([^/]+/[^/]+).*|\1|')
                 repo_name="${repo_url_part%.git}"
@@ -105,29 +107,34 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add -A Nodes/
           if git diff --cached --quiet; then
-            echo "pushed=false" >> $GITHUB_OUTPUT
+            echo "has_changes=false" >> $GITHUB_OUTPUT
             echo "✅ 内容无变动。"
           else
-            git commit -m "🌐 Nodes 同步更新"
+            git commit -m "🌐 Nodes 同步更新 (全量清理: ${{ env.CLEAN_BEFORE_PULL }})"
             git push origin HEAD:${{ github.ref_name }}
-            echo "pushed=true" >> $GITHUB_OUTPUT
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "✅ 已推送更新。"
           fi
 
       - name: 🚀 触发后续工作流
-        if: steps.commit_step.outputs.pushed == 'true' || github.event_name == 'workflow_dispatch'
+        # 只有在有新提交，或者是手动点击执行时，才触发后续脚本
+        if: steps.commit_step.outputs.has_changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
-          echo "正在触发后续工作流..."
+          echo "正在通知并启动后续工作流..."
           
-          # 触发第一个：main to B.yml
+          # 1. 触发 main to B.yml
+          echo "通知: main to B.yml"
           gh workflow run "main to B.yml" --ref ${{ github.ref_name }}
           
-          # 触发第二个：main.yml
+          # 2. 触发 main.yml
+          echo "通知: main.yml"
           gh workflow run "main.yml" --ref ${{ github.ref_name }}
           
-          # 触发第三个：main to B-README.yml
+          # 3. 触发 main to B-README.yml
+          echo "通知: main to B-README.yml"
           gh workflow run "main to B-README.yml" --ref ${{ github.ref_name }}
           
-          echo "✅ 所有工作流已成功启动请求。"
+          echo "🎉 所有后续脚本已成功触发！"
 
       - name: 清理临时空间
         if: always()
