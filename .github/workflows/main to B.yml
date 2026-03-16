@@ -71,12 +71,18 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           
-          rm -f Nodes/* || true
-          touch Nodes/.gitkeep
+          if [ "$CLEAN_NODES" = "true" ]; then
+            echo "🧹 CLEAN_NODES 开关已开启，正在清空 Nodes 文件夹..."
+            rm -f Nodes/* || true
+            touch Nodes/.gitkeep
+          else
+            echo "📦 CLEAN_NODES 开关已关闭，Nodes 文件夹内容将被保留。"
+          fi
+          
           git rm --cached tg_nodes.txt || true
           
           git add sources.yaml Nodes/ || true
-          git commit -m "♻️ Cleaned Nodes Dir & Updated Config: $(date) [skip ci]" || echo "No changes to commit in A Repo"
+          git commit -m "♻️ Updated Repo State: $(date) [skip ci]" || echo "No changes to commit in A Repo"
           git pull origin main --rebase=false -X ours || true
           git push
 
