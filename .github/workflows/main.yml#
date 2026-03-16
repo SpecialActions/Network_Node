@@ -65,26 +65,18 @@ jobs:
         run: |
           curl -s "http://127.0.0.1:25500/sub?target=mixed&url=http://127.0.0.1:8000/final_sub.yaml" > final_sub.txt
 
-      - name: 9. Clean Nodes, Update Config & Push
+      - name: 9. Update Config & Push
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
 
-          # 🌟 核心修正：加入转小写和默认值防崩溃机制
-          CLEAN_NODES=$(python -c "import yaml; data=yaml.safe_load(open('sources.yaml')); print(str(data.get('CLEAN_NODES', True)).lower())")
-
-          if [ "$CLEAN_NODES" = "true" ]; then
-            echo "🧹 CLEAN_NODES 开启: 清理 Nodes 文件夹"
-            rm -f Nodes/* || true
-            touch Nodes/.gitkeep
-          else
-            echo "📦 CLEAN_NODES 关闭: 保留 Nodes 文件夹内容"
-          fi
+          # 移除了所有关于 rm -f Nodes/* 的清理逻辑
+          echo "📦 保持 Nodes 文件夹内容持久化"
 
           git rm --cached tg_nodes.txt || true
           git add final_sub.yaml final_sub.txt sources.yaml Nodes/ || true
 
-          git commit -m "🚀 Auto updated nodes, cleaned sources & Nodes Dir: $(date) [skip ci]" || echo "No changes to commit"
+          git commit -m "🚀 Auto updated nodes & synced sources: $(date) [skip ci]" || echo "No changes to commit"
           
           git pull origin main --rebase=false -X ours || (git add final_sub.yaml final_sub.txt sources.yaml Nodes/ || true && git commit -m "Auto resolve merge conflicts [skip ci]" || true)
           git push
