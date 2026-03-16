@@ -9,25 +9,35 @@ TARGET_DIR: "Web/Nodes"
 # ==========================================
 # 节点获取源配置文件
 # ==========================================
-CHANNELS:
-- https://t.me/s/proxygogogo
-- https://t.me/s/freekankan
-- https://t.me/s/freeVPNjd
+# 1. GitHub 仓库或特定目录 
+REPOS:
+  - "https://github.com/Barabama/FreeNodes/tree/main/nodes"
+  - "https://github.com/Jsnzkpg/Jsnzkpg.git"
+  - "https://github.com/free-nodes/v2rayfree.git"
+  - "https://github.com/free-nodes/clashfree.git"
+
+# 2. 外部单文件直链
 EXTERNAL_URLS:
-- https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/permanent/mihomo.yaml
-- https://raw.githubusercontent.com/clashv2ray-hub/v2rayfree/refs/heads/main/v2ray.txt
-- https://raw.githubusercontent.com/shaoyouvip/free/refs/heads/main/all.yaml
-- https://raw.githubusercontent.com/Pawdroid/Free-servers/refs/heads/main/sub
-- https://raw.githubusercontent.com/PuddinCat/BestClash/refs/heads/main/proxies.yaml
-- https://raw.githubusercontent.com/telegeam/freenode/refs/heads/master/v2ray.txt
-- https://raw.githubusercontent.com/telegeam/freenode/refs/heads/master/clash.yaml
-- https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/subdom.txt
-- https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/clab.yaml
-- https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.txt
-- https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.meta.yml
-- https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash
-- https://raw.githubusercontent.com/ripaojiedian/freenode/main/sub
-- https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/c.yaml
-- https://beacon-api.ssdxz.cn/sub?token=b7013ff726878124d363c1680f59de74&b64
-- https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/proxy_configs.txt
-- https://gist.githubusercontent.com/shuaidaoya/9e5cf2749c0ce79932dd9229d9b4162b/raw/base64.txt
+  - https://raw.githubusercontent.com/ovmvo/FreeSub/refs/heads/main/sub/permanent/mihomo.yaml
+  - https://raw.githubusercontent.com/clashv2ray-hub/v2rayfree/refs/heads/main/v2ray.txt
+  - https://raw.githubusercontent.com/shaoyouvip/free/refs/heads/main/all.yaml
+  - https://raw.githubusercontent.com/Pawdroid/Free-servers/refs/heads/main/sub
+  - https://raw.githubusercontent.com/PuddinCat/BestClash/refs/heads/main/proxies.yaml
+  - https://raw.githubusercontent.com/telegeam/freenode/refs/heads/master/v2ray.txt
+  - https://raw.githubusercontent.com/telegeam/freenode/refs/heads/master/clash.yaml
+  - https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/subdom.txt
+  - https://raw.githubusercontent.com/ccpthisbigdog/freedomchina/refs/heads/main/clab.yaml
+  - https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.txt
+  - https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/master/list.meta.yml
+  - https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash
+  - https://raw.githubusercontent.com/ripaojiedian/freenode/main/sub
+  - https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/c.yaml
+  - https://beacon-api.ssdxz.cn/sub?token=b7013ff726878124d363c1680f59de74&b64
+  - https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/proxy_configs.txt
+  - https://gist.githubusercontent.com/shuaidaoya/9e5cf2749c0ce79932dd9229d9b4162b/raw/base64.txt
+
+# 3. Telegram 频道订阅源 
+CHANNELS:
+  - https://t.me/s/proxygogogo
+  - https://t.me/s/freekankan
+  - https://t.me/s/freeVPNjd
