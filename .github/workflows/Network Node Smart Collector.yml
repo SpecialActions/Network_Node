@@ -20,7 +20,7 @@ jobs:
   collect:
     runs-on: ubuntu-latest
     env:
-      CLEAN_BEFORE_PULL: false
+      CLEAN_BEFORE_PULL: true
       CLEAN_OLD_FILES: true
       # 【关键】必须在仓库 Secrets 中配置 MY_GIT_TOKEN (PAT)，否则无法触发后续流
       GH_TOKEN: ${{ secrets.MY_GIT_TOKEN }} 
