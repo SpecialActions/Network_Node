@@ -70,6 +70,7 @@ jobs:
             "https://github.com/Jsnzkpg/Jsnzkpg.git"
             "https://github.com/free-nodes/v2rayfree.git"
             "https://github.com/free-nodes/clashfree.git"
+            "https://github.com/free-nodes/clashfree.git"
           )
 
           for url in "${repos[@]}"; do
