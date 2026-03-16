@@ -1,4 +1,4 @@
-name: 🚀 Auto Update Network Nodes (Push to B)
+name: 🚀 Auto Update Network Nodes (Push to B+README)
 
 on:
   workflow_dispatch: 
