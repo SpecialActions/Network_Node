@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows/Network Node Acquisition.yml'
+      - '.github/workflows/Network Node Smart Collector.yml'
   schedule:
     - cron: '0 */8 * * *'
 
