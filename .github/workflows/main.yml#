@@ -64,7 +64,7 @@ jobs:
       - name: 8. Generate Universal Base64 Sub
         run: |
           curl -s "http://127.0.0.1:25500/sub?target=mixed&url=http://127.0.0.1:8000/final_sub.yaml" > final_sub.txt
-        
+
       - name: 9. Clean Nodes, Update Config & Push
         run: |
           git config --local user.email "actions@github.com"
