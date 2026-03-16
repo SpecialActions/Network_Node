@@ -19,24 +19,20 @@ try:
     EXTERNAL_URLS = config.get("EXTERNAL_URLS", [])
     DYNAMIC_REPOS = config.get("DYNAMIC_REPOS", [])
     
+    # 读取 B 仓库的目标配置，如果没有则使用默认值防崩溃
     TARGET_REPO = config.get("TARGET_REPO", "gw124/Collection")
     TARGET_DIR = config.get("TARGET_DIR", "Web/Nodes")
     
-    # 🌟 核心新增：读取清理开关，默认开启(True)防堆积
-    CLEAN_NODES = config.get("CLEAN_NODES", True) 
-    
+    # 🌟 核心魔法：将配置写入 GITHUB_ENV，让工作流的后续步骤可以直接使用
     env_file = os.getenv('GITHUB_ENV')
     if env_file:
         with open(env_file, "a", encoding="utf-8") as env_f:
             env_f.write(f"TARGET_REPO={TARGET_REPO}\n")
             env_f.write(f"TARGET_DIR={TARGET_DIR}\n")
-            # 🌟 核心新增：把开关状态变成小写字符串传给后续 Bash 脚本
-            env_f.write(f"CLEAN_NODES={str(CLEAN_NODES).lower()}\n") 
             
     print(f"✅ 成功加载 sources.yaml")
     print(f"  --> B 仓库目标: {TARGET_REPO}")
     print(f"  --> B 仓库路径: {TARGET_DIR}")
-    print(f"  --> 自动清空 Nodes 开关: {'开启' if CLEAN_NODES else '关闭'}")
     
 except Exception as e:
     print(f"❌ 读取 sources.yaml 失败: {e}")
