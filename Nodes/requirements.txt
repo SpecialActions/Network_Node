@@ -1,0 +1,13 @@
+# requirements.txt
+
+numpy
+scrapy
+selenium
+opencv-python
+opencv-python-headless
+rapidocr_onnxruntime
+webdriver-manager
+fake_useragent
+albumentations
+scikit-image
+pytubefix
