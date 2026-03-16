@@ -70,7 +70,7 @@ jobs:
             exit 1
           fi
 
-          mapfile -t repos < <(yq -r '.REPOS[] // empty' sources.yaml)
+          mapfile -t repos < <(yq -r '.REPOS[]' sources.yaml)
           
           echo "✅ 成功从 sources.yaml 加载了 ${#repos[@]} 个源，开始处理..."
 
