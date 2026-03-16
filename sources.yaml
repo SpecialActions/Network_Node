@@ -36,7 +36,12 @@ EXTERNAL_URLS:
   - https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/proxy_configs.txt
   - https://gist.githubusercontent.com/shuaidaoya/9e5cf2749c0ce79932dd9229d9b4162b/raw/base64.txt
 
-# 3. Telegram 频道订阅源 
+# 3. 动态日期订阅源
+DATE_TEMPLATES:
+  - "https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.yml
+  - "https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.txt
+
+# 4. Telegram 频道订阅源 
 CHANNELS:
   - https://t.me/s/proxygogogo
   - https://t.me/s/freekankan
