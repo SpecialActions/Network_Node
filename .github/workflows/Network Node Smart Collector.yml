@@ -2,7 +2,7 @@ name: 📦 Network Node Smart Collector
 
 permissions:
   contents: write
-  actions: write # 必须开启此权限才能触发其他工作流
+  actions: write 
 
 concurrency:
   group: node-collector-${{ github.ref }}
@@ -22,7 +22,8 @@ jobs:
     env:
       CLEAN_BEFORE_PULL: true 
       CLEAN_OLD_FILES: true
-      GH_TOKEN: ${{ github.token }} # 预装的 GitHub CLI 工具所需 Token
+      # 【关键】必须在仓库 Secrets 中配置 MY_GIT_TOKEN (PAT)，否则无法触发后续流
+      GH_TOKEN: ${{ secrets.MY_GIT_TOKEN }} 
 
     steps:
       - name: Checkout 仓库内容
@@ -101,40 +102,36 @@ jobs:
           done
 
       - name: 提交并推送
-        id: commit_step
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add -A Nodes/
           if git diff --cached --quiet; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "✅ 内容无变动。"
+            echo "✅ 内容无实际变动，但将继续触发后续流程。"
           else
             git commit -m "🌐 Nodes 同步更新 (全量清理: ${{ env.CLEAN_BEFORE_PULL }})"
             git push origin HEAD:${{ github.ref_name }}
-            echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "✅ 已推送更新。"
           fi
 
-      - name: 🚀 触发后续工作流
-        # 只有在有新提交，或者是手动点击执行时，才触发后续脚本
-        if: steps.commit_step.outputs.has_changes == 'true' || github.event_name == 'workflow_dispatch'
+      - name: 🚀 强制触发后续工作流
+        # 移除了 if 判断，无论如何都运行
         run: |
           echo "正在通知并启动后续工作流..."
           
           # 1. 触发 main to B.yml
           echo "通知: main to B.yml"
-          gh workflow run "main to B.yml" --ref ${{ github.ref_name }}
+          gh workflow run "main to B.yml" --ref ${{ github.ref_name }} || echo "⚠️ 触发失败"
           
           # 2. 触发 main.yml
           echo "通知: main.yml"
-          gh workflow run "main.yml" --ref ${{ github.ref_name }}
+          gh workflow run "main.yml" --ref ${{ github.ref_name }} || echo "⚠️ 触发失败"
           
           # 3. 触发 main to B-README.yml
           echo "通知: main to B-README.yml"
-          gh workflow run "main to B-README.yml" --ref ${{ github.ref_name }}
+          gh workflow run "main to B-README.yml" --ref ${{ github.ref_name }} || echo "⚠️ 触发失败"
           
-          echo "🎉 所有后续脚本已成功触发！"
+          echo "🎉 所有后续脚本调用指令已发送！"
 
       - name: 清理临时空间
         if: always()
