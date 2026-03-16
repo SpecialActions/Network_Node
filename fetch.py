@@ -17,7 +17,18 @@ try:
     CHANNELS = config.get("CHANNELS", [])
     EXTERNAL_URLS = config.get("EXTERNAL_URLS", [])
     DYNAMIC_REPOS = config.get("DYNAMIC_REPOS", [])
+    
+    # 🌟 核心新增：读取清理 Nodes 文件夹的开关 (如果没填，默认设为开启 True)
+    CLEAN_NODES = config.get("CLEAN_NODES", True)
+    
+    # 🌟 核心新增：将开关状态传递给 GitHub Actions 的环境变量
+    env_file = os.getenv('GITHUB_ENV')
+    if env_file:
+        with open(env_file, "a", encoding="utf-8") as env_f:
+            env_f.write(f"CLEAN_NODES={str(CLEAN_NODES).lower()}\n")
+            
     print(f"✅ 成功加载 sources.yaml: {len(CHANNELS)}个频道, {len(EXTERNAL_URLS)}个外部链接, {len(DYNAMIC_REPOS)}个动态仓库。")
+    print(f"  --> 自动清空 Nodes 开关: {'开启' if CLEAN_NODES else '关闭'}")
 except Exception as e:
     print(f"❌ 读取 sources.yaml 失败: {e}")
     print("请确保仓库根目录存在 sources.yaml 文件！")
