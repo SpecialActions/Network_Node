@@ -65,23 +65,16 @@ jobs:
         run: |
           curl -s "http://127.0.0.1:25500/sub?target=mixed&url=http://127.0.0.1:8000/final_sub.yaml" > final_sub.txt
 
-      - name: 9. Clean A Repo (清理当前 A 仓库现场)
+      - name: 9. Sync & Push A Repo
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           
-          # 🌟 核心升级：增加开关判断逻辑
-          if [ "$CLEAN_NODES" = "true" ]; then
-            echo "🧹 CLEAN_NODES 开关已开启，正在清空 Nodes 文件夹..."
-            rm -f Nodes/* || true
-            touch Nodes/.gitkeep
-          else
-            echo "📦 CLEAN_NODES 开关已关闭，Nodes 文件夹内容将被保留。"
-          fi
-          
+          # 移除了清空 Nodes 文件夹的逻辑，现在直接添加
           git rm --cached tg_nodes.txt || true
-          
           git add sources.yaml Nodes/ || true
+          
+          # 提交更改
           git commit -m "♻️ Updated Repo State: $(date) [skip ci]" || echo "No changes to commit in A Repo"
           git pull origin main --rebase=false -X ours || true
           git push
