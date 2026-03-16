@@ -38,8 +38,8 @@ EXTERNAL_URLS:
 
 # 3. 动态日期订阅源
 DATE_TEMPLATES:
-  - "https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.yml
-  - "https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.txt
+  - https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.yml
+  - https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.txt
 
 # 4. Telegram 频道订阅源 
 CHANNELS:
