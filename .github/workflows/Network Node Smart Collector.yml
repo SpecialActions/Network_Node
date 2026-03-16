@@ -115,23 +115,26 @@ jobs:
           fi
 
       - name: 🚀 强制触发后续工作流
-        # 移除了 if 判断，无论如何都运行
+        env:
+          # 尝试直接在这里绑定默认 Token
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "正在通知并启动后续工作流..."
           
+          # 使用 gh 命令行工具，并捕获可能的错误输出
           # 1. 触发 main to B.yml
           echo "通知: main to B.yml"
-          gh workflow run "main to B.yml" --ref ${{ github.ref_name }} || echo "⚠️ 触发失败"
+          gh workflow run "main to B.yml" --ref ${{ github.ref_name }} || echo "❌ main to B.yml 触发失败"
           
           # 2. 触发 main.yml
           echo "通知: main.yml"
-          gh workflow run "main.yml" --ref ${{ github.ref_name }} || echo "⚠️ 触发失败"
+          gh workflow run "main.yml" --ref ${{ github.ref_name }} || echo "❌ main.yml 触发失败"
           
           # 3. 触发 main to B-README.yml
           echo "通知: main to B-README.yml"
-          gh workflow run "main to B-README.yml" --ref ${{ github.ref_name }} || echo "⚠️ 触发失败"
+          gh workflow run "main to B-README.yml" --ref ${{ github.ref_name }} || echo "❌ main to B-README.yml 触发失败"
           
-          echo "🎉 所有后续脚本调用指令已发送！"
+          echo "🎉 触发指令处理完毕。"
 
       - name: 清理临时空间
         if: always()
