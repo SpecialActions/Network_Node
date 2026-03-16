@@ -1,4 +1,4 @@
-name: 🚀 Auto Update Network Nodes
+name: 🚀 Auto Update Network Nodes (Push to B)
 
 on:
   workflow_dispatch: 
@@ -40,8 +40,9 @@ jobs:
           sleep 5
           curl -4 ifconfig.me
 
-      - name: 5. Run fetch.py (执行动态抓取与配置自我净化)
-        run: python fetch.py
+      - name: 5. Run "fetch to B.py" (执行动态抓取与配置传参)
+        # 🌟 核心修改：这里带上了双引号，完美兼容带空格的文件名！
+        run: python "fetch to B.py"
 
       - name: 6. Subconverter Parse
         run: |
@@ -70,41 +71,32 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           
-          # 清理 Nodes 文件夹内临时文件
           rm -f Nodes/* || true
           touch Nodes/.gitkeep
-          
-          # 强行从 git 追踪中删除可能存在的 tg_nodes.txt
           git rm --cached tg_nodes.txt || true
           
-          # 🌟 A 仓库现在只负责保存净化后的 sources.yaml 和干净的 Nodes 文件夹！
-          # 不再把 final_sub 提交到 A 仓库
           git add sources.yaml Nodes/ || true
-          
           git commit -m "♻️ Cleaned Nodes Dir & Updated Config: $(date) [skip ci]" || echo "No changes to commit in A Repo"
           git pull origin main --rebase=false -X ours || true
           git push
 
-      - name: 10. Push Results to B Repo (推送最终结果到 B 仓库)
+      - name: 10. Push Results to B Repo (根据 sources.yaml 动态推送到目标)
         env:
-          # 提取你设置的环境变量密钥
           GW124_TOKEN: ${{ secrets.GW124_TOKEN }}
         run: |
-          # 1. 用 Token 克隆 B 仓库到临时文件夹 b_repo
-          git clone https://${GW124_TOKEN}@github.com/gw124/Collection.git b_repo
+          echo "准备推送到目标仓库: ${TARGET_REPO}, 目标路径: ${TARGET_DIR}"
           
-          # 2. 确保 B 仓库中指定的目录存在，如果不存在则自动创建
-          mkdir -p b_repo/Web/Nodes
+          git clone https://${GW124_TOKEN}@github.com/${TARGET_REPO}.git b_repo
           
-          # 3. 把刚刚生成的最终节点文件复制过去
-          cp final_sub.yaml b_repo/Web/Nodes/
-          cp final_sub.txt b_repo/Web/Nodes/
+          mkdir -p b_repo/${TARGET_DIR}
           
-          # 4. 进入 B 仓库目录，执行提交并推送
+          cp final_sub.yaml b_repo/${TARGET_DIR}/
+          cp final_sub.txt b_repo/${TARGET_DIR}/
+          
           cd b_repo
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           
-          git add Web/Nodes/final_sub.yaml Web/Nodes/final_sub.txt
+          git add ${TARGET_DIR}/final_sub.yaml ${TARGET_DIR}/final_sub.txt
           git commit -m "🚀 Auto update High-Speed nodes: $(date)" || echo "No changes to commit in B Repo"
           git push
