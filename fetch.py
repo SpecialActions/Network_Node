@@ -7,7 +7,7 @@ import hashlib
 import yaml
 import os
 import sys
-import datetime # 🌟 新增：引入处理日期的模块
+import datetime
 
 # ==========================================
 # 1. 动态加载配置文件
@@ -169,32 +169,40 @@ def check_external_links(urls_to_check):
             
     return valid_urls
 
-# 🌟 新增：智能日期模板探测函数
 def get_date_template_links():
     print("\n" + "="*50)
     print("📆 阶段 2.5: 智能嗅探日期动态源")
     print("="*50)
     valid_date_urls = []
     
-    # 获取今天、昨天、前天的日期字符串，防止时差或网站还没更新
+    # 获取今天、昨天、前天的时间对象，防止时差或网站还没更新
     today = datetime.datetime.now()
     dates_to_try = [
-        today.strftime("%Y%m%d"),
-        (today - datetime.timedelta(days=1)).strftime("%Y%m%d"),
-        (today - datetime.timedelta(days=2)).strftime("%Y%m%d")
+        today,
+        today - datetime.timedelta(days=1),
+        today - datetime.timedelta(days=2)
     ]
     
     for template in DATE_TEMPLATES:
         found = False
-        for date_str in dates_to_try:
-            test_url = template.replace("{YYYYMMDD}", date_str)
+        for target_date in dates_to_try:
+            # 自动生成三种最常见的日期格式
+            format_basic = target_date.strftime("%Y%m%d")      # 20260316
+            format_hyphen = target_date.strftime("%Y-%m-%d")   # 2026-03-16
+            format_under = target_date.strftime("%Y_%m_%d")    # 2026_03_16
+            
+            # 智能替换模板中可能出现的所有格式占位符
+            test_url = template.replace("{YYYYMMDD}", format_basic) \
+                               .replace("{YYYY-MM-DD}", format_hyphen) \
+                               .replace("{YYYY_MM_DD}", format_under)
+                               
             is_yaml = test_url.endswith('.yaml') or test_url.endswith('.yml')
             try:
                 res = requests.get(test_url, timeout=5)
                 if res.status_code == 200:
                     count = count_nodes_in_text(res.text, is_yaml)
                     if count > 0:
-                        print(f"  [✅ 命中] 日期 {date_str} 发现 {count:3} 个节点 <- {test_url}")
+                        print(f"  [✅ 命中] 日期 {format_basic} 发现 {count:3} 个节点 <- {test_url}")
                         valid_date_urls.append(test_url)
                         found = True
                         break # 命中最新的就直接跳出，不再找更旧的日期
