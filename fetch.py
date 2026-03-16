@@ -169,6 +169,7 @@ def check_external_links(urls_to_check):
             
     return valid_urls
 
+# 🌟 新增：智能日期模板探测函数 (全占位符支持版)
 def get_date_template_links():
     print("\n" + "="*50)
     print("📆 阶段 2.5: 智能嗅探日期动态源")
@@ -186,15 +187,23 @@ def get_date_template_links():
     for template in DATE_TEMPLATES:
         found = False
         for target_date in dates_to_try:
-            # 自动生成三种最常见的日期格式
-            format_basic = target_date.strftime("%Y%m%d")      # 20260316
-            format_hyphen = target_date.strftime("%Y-%m-%d")   # 2026-03-16
-            format_under = target_date.strftime("%Y_%m_%d")    # 2026_03_16
+            # 自动生成基础日期格式
+            format_basic = target_date.strftime("%Y%m%d")      # 20260317
+            format_hyphen = target_date.strftime("%Y-%m-%d")   # 2026-03-17
+            format_under = target_date.strftime("%Y_%m_%d")    # 2026_03_17
+            
+            # 提取独立的年、月、日
+            yyyy = target_date.strftime("%Y")                  # 2026
+            mm = target_date.strftime("%m")                    # 03
+            dd = target_date.strftime("%d")                    # 17
             
             # 智能替换模板中可能出现的所有格式占位符
             test_url = template.replace("{YYYYMMDD}", format_basic) \
                                .replace("{YYYY-MM-DD}", format_hyphen) \
-                               .replace("{YYYY_MM_DD}", format_under)
+                               .replace("{YYYY_MM_DD}", format_under) \
+                               .replace("{YYYY}", yyyy) \
+                               .replace("{MM}", mm) \
+                               .replace("{DD}", dd)
                                
             is_yaml = test_url.endswith('.yaml') or test_url.endswith('.yml')
             try:
