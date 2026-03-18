@@ -163,10 +163,9 @@ def test_proxy(p, retries=2):
     return p, 0
 
 valid_proxies = []
-print(f"开始进行【双重验证】并发连通性测试 (限时 {MAX_DELAY}ms，50 线程狂飙)...")
+print(f"开始进行【双重验证】并发连通性测试 (限时 {MAX_DELAY}ms，100 线程狂飙)...")
 
-# 核心升级：使用 ThreadPoolExecutor 开启 50 个并发线程同时测速
-with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
     # 提交所有测速任务
     future_to_proxy = {executor.submit(test_proxy, p): p for p in proxies}
     
