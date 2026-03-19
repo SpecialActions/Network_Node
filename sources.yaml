@@ -1,5 +1,5 @@
 TARGET_REPO: gw124/Collection
-TARGET_DIR: Web/Nodes
+TARGET_DIR: Config/Proxy/Nodes
 REPOS:
 - https://github.com/Barabama/FreeNodes/tree/main/nodes
 - https://github.com/Jsnzkpg/Jsnzkpg.git
