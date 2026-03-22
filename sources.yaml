@@ -50,6 +50,9 @@ EXTERNAL_URLS:
 - https://raw.githubusercontent.com/Barabama/FreeNodes/main/nodes/ndnode.txt
 - https://raw.githubusercontent.com/Barabama/FreeNodes/main/nodes/clashmeta.txt
 - https://raw.githubusercontent.com/xiaoji235/airport-free/main/v2ray.txt
+- vmess://eyJ2IjoiMiIsImFkZCI6InN0b3JlLnViaS5jb20iLCJwb3J0Ijo4ODgwLCJzY3kiOiJhdXRvIiwicHMiOiJVUy12bWVzcyt3cyt0bHMtZTU5aWdpaWQiLCJuZXQiOiJ3cyIsImlkIjoiM2I2ZDcxNWQtZDgxNy00ZTEzLWI1OTAtYzBiMzhjZTg2NzM0IiwiYWxwbiI6IiIsImZwIjoiIiwiYWlkIjowLCJ0eXBlIjoibm9uZSIsImhvc3QiOiJnYW1lLmZsZXkuZXUuY2MiLCJwYXRoIjoiL215a2luZ211c2ljIiwidGxzIjoiIiwiYWxsb3dJbnNlY3VyZSI6dHJ1ZSwic25pIjoiIiwiZnJhZ21lbnQiOiIsMTAwLTIwMCwxMC02MCIsIm9zIjoiIn0= 
+- vless://bac7e2ac-2988-42f9-b11b-6ebee24ce98b@saas.sin.fan:2053?flow=&encryption=none&security=tls&sni=game.fley.eu.cc&type=ws&host=game.fley.eu.cc&path=/afefiubasjd&headerType=none&alpn=h2%2Chttp/1.1&fp=chrome&pbk=&sid=&spx=&allowInsecure=1&fragment=,100-200,10-60&os=#US-vless+ws+tls-lzgezl9g 
+- vless://647629e3-0223-46b1-bcec-cae391bbba3f@store.ubi.com:2083?flow=&encryption=none&security=tls&sni=game.fley.eu.cc&type=httpupgrade&host=game.fley.eu.cc&path=/my-secret-link&headerType=none&alpn=h2%2Chttp/1.1&fp=chrome&pbk=&sid=&spx=&allowInsecure=1&fragment=,100-200,10-60&os=#US-vless+HTTPUpgrade+tls-d50gbphb
 DATE_TEMPLATES:
 - https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.yml
 - https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.txt
