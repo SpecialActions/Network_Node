@@ -27,7 +27,6 @@ EXTERNAL_URLS:
 - https://sub.proxygo.org/v2ray.php?key=e2e0eb16eb2749533f296ba637680615
 - https://raw.githubusercontent.com/dongchengjie/airport/refs/heads/main/subs/merged/tested_within.yaml
 - https://raw.githubusercontent.com/v2raynnodes/clashfree/refs/heads/main/clash.yaml
-- https://raw.githubusercontent.com/Successful72/SocksProxytoClash/refs/heads/main/Proxies.yaml
 - https://raw.githubusercontent.com/WLget/V2Ray_configs_64/refs/heads/master/ConfigSub_list.txt
 - https://www.xrayvip.com/free.txt
 - https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt
