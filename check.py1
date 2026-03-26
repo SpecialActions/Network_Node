@@ -14,7 +14,7 @@ import concurrent.futures
 # 警告：GitHub 服务器在美国，测亚洲节点物理延迟极高(>600ms)
 # 强烈建议保持 2500ms 以上，否则会把香港/新加坡/日本节点全部杀光！
 # ==========================================
-MAX_DELAY = 2500
+MAX_DELAY = 3000
 
 try:
     with open("clash_nodes.yaml", "r", encoding='utf-8') as f:
