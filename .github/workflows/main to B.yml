@@ -34,10 +34,25 @@ jobs:
           curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
           sudo apt-get update && sudo apt-get install cloudflare-warp -y
+          
           warp-cli --accept-tos registration new
-          warp-cli --accept-tos mode warp
+          
+          # 🌟 核心修改 1：切换为 proxy 模式，并指定 40000 端口
+          warp-cli --accept-tos mode proxy
+          warp-cli --accept-tos proxy port 40000
           warp-cli --accept-tos connect
           sleep 5
+          
+          # 🌟 核心修改 2：将代理配置写入 GitHub 环境变量
+          # 这样后续的 Python 爬虫和 curl 就会自动走 WARP 的 IP 出国！
+          echo "http_proxy=socks5h://127.0.0.1:40000" >> $GITHUB_ENV
+          echo "https_proxy=socks5h://127.0.0.1:40000" >> $GITHUB_ENV
+          
+          # 🌟 核心修改 3：极其重要！必须让本地流量(Subconverter)不走代理，否则工作流会卡死
+          echo "no_proxy=localhost,127.0.0.1,::1" >> $GITHUB_ENV
+          
+          # 测试一下 WARP IP 是否生效
+          echo "当前的伪装 IP 是:"
           curl -4 ifconfig.me
 
       - name: 5. Run "fetch to B.py" (执行动态抓取与配置传参)
