@@ -2,11 +2,11 @@ name: 🚀 Internet Auto Node Aggregator
 
 on:
   workflow_dispatch: # 允许手动触发
-#  schedule:
-#    - cron: '30 */3 * * *' # 每天 UTC 4:00 和 16:00 自动执行
+  schedule:
+    - cron: '30 * * * *' # 每天 UTC 4:00 和 16:00 自动执行
   push:
     paths:
-      - 'final_sub.yaml' # 文件更新时自动触发
+      - 'Config/Internet_Nodes_Aggregation.txt' # 文件更新时自动触发
 
 # ==========================================
 # 🌟 全局环境变量配置
