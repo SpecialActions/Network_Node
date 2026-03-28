@@ -22,7 +22,6 @@ EXTERNAL_URLS:
 - https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/c.yaml
 - https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/main/configs/proxy_configs.txt
 - https://gist.githubusercontent.com/shuaidaoya/9e5cf2749c0ce79932dd9229d9b4162b/raw/base64.txt
-- https://xmxosfepggzm.503403.xyz
 - https://raw.githubusercontent.com/dongchengjie/airport/refs/heads/main/subs/merged/tested_within.yaml
 - https://raw.githubusercontent.com/v2raynnodes/clashfree/refs/heads/main/clash.yaml
 - https://raw.githubusercontent.com/WLget/V2Ray_configs_64/refs/heads/master/ConfigSub_list.txt
