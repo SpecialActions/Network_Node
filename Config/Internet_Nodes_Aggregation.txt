@@ -1,0 +1,2 @@
+https://raw.githubusercontent.com/gw124/Collection/refs/heads/main/Config/Proxy/Nodes/final_sub.yaml
+https://raw.githubusercontent.com/SpecialActions/Network_Node/refs/heads/main/final_sub.yaml
