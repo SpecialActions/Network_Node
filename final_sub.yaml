@@ -161,19 +161,6 @@ proxies:
     headers:
       Host: sni.jpmj.dev
 - name: 伯利兹 05
-  server: 45.131.209.191
-  port: 2096
-  type: vless
-  uuid: 6202b230-417c-4d8e-b624-0f71afa9c75d
-  tls: true
-  servername: sni.my111000.tech
-  client-fingerprint: chrome
-  network: ws
-  ws-opts:
-    path: /Telegram🇨🇳@WangCai2/
-    headers:
-      Host: sni.my111000.tech
-- name: 伯利兹 06
   server: 45.131.210.138
   port: 2096
   type: vless
@@ -186,6 +173,19 @@ proxies:
     path: /?ed=2560&Telegram🇨🇳 @WangCai2
     headers:
       Host: sni.111000.indevs.in
+- name: 伯利兹 06
+  server: 45.131.209.191
+  port: 2096
+  type: vless
+  uuid: 6202b230-417c-4d8e-b624-0f71afa9c75d
+  tls: true
+  servername: sni.my111000.tech
+  client-fingerprint: chrome
+  network: ws
+  ws-opts:
+    path: /Telegram🇨🇳@WangCai2/
+    headers:
+      Host: sni.my111000.tech
 - name: 伯利兹 07
   server: 45.131.6.191
   port: 2096
@@ -223,6 +223,12 @@ proxies:
   servername: www.fh-aachen.de
   client-fingerprint: chrome
   network: tcp
+- name: 俄罗斯 04
+  server: 77.73.68.155
+  port: 54106
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: 9CmcQ6dF8LEyZU0YsMjgu8
 - name: 俄罗斯联邦 01
   server: 45.151.182.205
   port: 52006
@@ -626,7 +632,7 @@ proxies:
     path: /
     headers:
       Host: zh.hollowspot.ir
-- name: 加拿大 25
+- name: 加拿大 27
   server: 108.162.193.217
   port: 443
   type: vless
@@ -1496,13 +1502,19 @@ proxies:
   port: 16233
   type: ss
   cipher: chacha20-ietf-poly1305
-  password: Xsy8Ox4yOV3xLlpxtjzs3X
-- name: 南非 02
+  password: ARgvGZywA+gacgGV26Bvmu05+wZmRW/j+AdU+Z8Bt44=
+- name: 南非 01
   server: 102.37.156.224
   port: 443
   type: ss
   cipher: chacha20-ietf-poly1305
   password: aduB9HGxQHjA2SBMRjkHX6
+- name: 南非 02
+  server: 102.133.165.160
+  port: 16233
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: Xsy8Ox4yOV3xLlpxtjzs3X
 - name: 南非 03
   server: 156.38.168.58
   port: 990
@@ -1806,6 +1818,18 @@ proxies:
   client-fingerprint: chrome
   network: tcp
 - name: 土耳其 03
+  server: 77.92.145.222
+  port: 443
+  type: vless
+  uuid: 53821f3c-5b03-456a-89f3-f8379f130752
+  tls: true
+  reality-opts:
+    public-key: sSD0sNHv6R3VC1zy_etv-mOTLAurVq3xid4xWne3TxI
+    short-id: 4730242d
+  servername: www.vk.com
+  client-fingerprint: chrome
+  network: tcp
+- name: 土耳其 04
   server: 82.26.94.193
   port: 443
   type: vless
@@ -1817,7 +1841,7 @@ proxies:
   servername: www.nvidia.com
   client-fingerprint: chrome
   network: tcp
-- name: 土耳其 04
+- name: 土耳其 05
   server: 185.181.208.246
   port: 443
   type: vless
@@ -1829,7 +1853,7 @@ proxies:
   servername: www.google.com
   client-fingerprint: chrome
   network: tcp
-- name: 土耳其 05
+- name: 土耳其 06
   server: 89.35.73.250
   port: 443
   type: vless
@@ -1842,7 +1866,7 @@ proxies:
   servername: www.refersion.com
   client-fingerprint: chrome
   network: tcp
-- name: 土耳其 06
+- name: 土耳其 07
   server: 86.38.214.238
   port: 2096
   type: vless
@@ -1855,7 +1879,7 @@ proxies:
     path: /?ed=2560&Telegram🇨🇳 @WangCai2
     headers:
       Host: sni.jpmj.dev
-- name: 土耳其 07
+- name: 土耳其 08
   server: 38.180.104.27
   port: 8444
   type: trojan
@@ -1945,16 +1969,16 @@ proxies:
       Host: sni.111000.indevs.in
 - name: 墨西哥 01
   server: 147.78.1.230
-  port: 990
-  type: ss
-  cipher: chacha20-ietf-poly1305
-  password: ARgvGZywA+gacgGV26Bvmu05+wZmRW/j+AdU+Z8Bt44=
-- name: 墨西哥 02
-  server: 147.78.1.230
   port: 989
   type: ss
   cipher: aes-256-cfb
   password: f8f7aCzcPKbsF8p3
+- name: 墨西哥 02
+  server: 147.78.1.230
+  port: 990
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: ARgvGZywA+gacgGV26Bvmu05+wZmRW/j+AdU+Z8Bt44=
 - name: 奥地利 01
   server: 152.53.45.251
   port: 8888
@@ -3265,8 +3289,8 @@ proxies:
     headers:
       Host: sni.111000.indevs.in
 - name: 德意志联邦共和国 02
-  server: 91.107.250.73
-  port: 2052
+  server: 91.107.249.251
+  port: 6780
   type: trojan
   password: trojan
   sni: jflsjlaf.pages.dev
@@ -3501,6 +3525,7 @@ proxies:
   type: trojan
   password: wp9IsiY82uQhcmgNC1eoBM
   sni: www.semanticstaplegun.click
+  skip-cert-verify: true
 - name: 挪威 04
   server: 80.173.231.254
   port: 12420
@@ -3553,21 +3578,6 @@ proxies:
     path: /
     headers:
       Host: jflsjlaf.pages.dev
-- name: 摩尔多瓦 01
-  server: 94.103.0.92
-  port: 2443
-  type: vless
-  uuid: c01733dd-3e58-4da9-910b-cdd4560295bc
-  tls: true
-  reality-opts:
-    public-key: ZMvMtsHKNd39qVM9CuPLMEXUL19ViL4Qqqk1y5mMjko
-    short-id: a1b2c3d4
-  servername: crowdtest.payment-widget-smarttv.plus.tst.kinopoisk.ru
-  client-fingerprint: chrome
-  network: grpc
-  grpc-opts:
-    grpc-mode: gun
-    grpc-service-name: TestChatGRPC
 - name: 摩洛哥 01
   server: 154.70.207.97
   port: 990
@@ -3673,16 +3683,17 @@ proxies:
   type: ss
   cipher: chacha20-ietf-poly1305
   password: ARgvGZywA+gacgGV26Bvmu05+wZmRW/j+AdU+Z8Bt44=
-- name: 新加坡 12
-  server: 20.191.143.151
-  port: 8080
+- name: 日本 01
+  server: 167.179.76.8
+  port: 443
   type: vless
-  uuid: 69c4f82f-ad75-a1be-51ef-8e8af76452f8
+  uuid: 8d2aeab8-ce98-47a6-84ec-d5b45d060b66
   tls: true
-  servername: b577c283.sfree.cn.mt
+  servername: edt2.btxst.eu.cc
+  client-fingerprint: chrome
   network: ws
   ws-opts:
-    path: /socks5=4b2c7676:6f0f4cbba5bb@38.111.30.111:26433
+    path: /services/store
     headers:
       Host: b577c283.sfree.cn.mt
 - name: 日本 01
@@ -3763,7 +3774,7 @@ proxies:
   cipher: aes-128-gcm
   password: shadowsocks
 - name: 日本 11
-  server: 149.22.87.204
+  server: 149.22.87.241
   port: 443
   type: ss
   cipher: aes-128-gcm
@@ -3963,15 +3974,31 @@ proxies:
 - name: 未知地区 102
   server: irancell.buzzmuzzpanel.online
   port: 443
-  type: vless
-  uuid: ef6db9e0-4c05-4933-a599-0dc9530f08cc
-  tls: true
-  alpn:
-  - http/1.1
-  servername: 022.eLEctRocELlcO-CF-022.worKeRs.DEV
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: 9tqhMdIrTkgQ46PvhyAtMH
+- name: 未知地区 07
+  server: switcher-nick-croquet.freesocks.work
+  port: 443
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: RFK38Cg7APneSB5cWDcpbm
+- name: 未知地区 08
+  server: switcher-nick-croquet.freesocks.work
+  port: 443
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: wwzVn2ZnHfqYa6l8EWh3eY
+- name: 未知地区 09
+  server: ubu.okaoclax.me
+  port: 443
+  type: trojan
+  password: 13c169be-8592-4eaa-94cb-69c859e7d987
+  sni: ubu.okaoclax.me
+  skip-cert-verify: false
   network: ws
   ws-opts:
-    path: /eyJqdW5rIjoiZDlTMUlUZGZPM0NYVCIsInByb3RvY29sIjoidmwiLCJtb2RlIjoicHJveHlpcCIsInBhbmVsSVBzIjpbXX0=
+    path: /trojan-ws
     headers:
       Host: 022.eLEctRocELlcO-CF-022.worKeRs.DEV
 - name: 未知地区 103
@@ -6001,8 +6028,11 @@ proxies:
 - name: 未知地区 321
   server: touching-pigeon.rooster465.autos
   port: 443
-  type: trojan
-  password: WF42809561
+  type: vmess
+  uuid: 81d5cac4-d039-4874-9a20-c391f580012d
+  alterId: 0
+  cipher: auto
+  tls: true
   skip-cert-verify: true
   udp: true
 - name: 未知地区 322
@@ -6999,7 +7029,7 @@ proxies:
   tls: false
   network: ws
   ws-opts:
-    path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1?ed=2560
+    path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
     headers:
       Host: TABRIZ.NET
 - name: 法国 23
@@ -7062,7 +7092,6 @@ proxies:
   alterId: 0
   cipher: auto
   tls: false
-  skip-cert-verify: false
   network: ws
   ws-opts:
     path: /?ed=2048
@@ -7076,7 +7105,6 @@ proxies:
   alterId: 0
   cipher: auto
   tls: false
-  skip-cert-verify: false
   network: ws
   ws-opts:
     path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
@@ -7088,10 +7116,9 @@ proxies:
   alterId: 0
   cipher: auto
   tls: false
-  skip-cert-verify: false
   network: ws
   ws-opts:
-    path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1?ed=2560
+    path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
     headers:
       Host: Azerb.NET
 - name: 法国 30
@@ -7102,10 +7129,83 @@ proxies:
   alterId: 0
   cipher: auto
   tls: false
+  network: ws
+  ws-opts:
+    path: /
+    headers:
+      Host: AZERB.NET
+- name: 法国 20
+  server: 2001:bc8:32d7:302::10
+  port: 44579
+  type: vmess
+  uuid: 8e34e170-13ae-4892-9d20-05962acc9f84
+  alterId: 0
+  cipher: auto
+  tls: false
+  network: ws
+  ws-opts:
+    path: /?ed=2048@V2Ray_hiddify10--https://t.me/V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--https://t.me/V2Ray_hiddify10
+- name: 法国 21
+  server: 2001:bc8:32d7:302::10
+  port: 44579
+  type: vmess
+  uuid: 8e34e170-13ae-4892-9d20-05962acc9f84
+  alterId: 0
+  cipher: auto
+  tls: false
+  servername: 2001:bc8:32d7:302::10
+  network: ws
+  ws-opts:
+    path: /?ed=2048HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN--HiByeVPNN
+    headers:
+      Host: 2001:bc8:32d7:302::10
+- name: 法国 22
+  server: 2001:bc8:32d7:302::10
+  port: 44579
+  type: vmess
+  uuid: 8e34e170-13ae-4892-9d20-05962acc9f84
+  alterId: 0
+  cipher: auto
+  tls: false
+  network: ws
+  ws-opts:
+    path: /?ed=2048
+- name: 法国 23
+  server: 94.183.186.27
+  port: 443
+  type: vless
+  uuid: 6202b230-417c-4d8e-b624-0f71afa9c75d
+  tls: true
+  servername: sni.111000.v6.navy
+  network: ws
+  ws-opts:
+    path: /?ed=2560
+    headers:
+      Host: sni.111000.v6.navy
+- name: 法国 24
+  server: 217.60.252.232
+  port: 2053
+  type: vless
+  uuid: 6202b230-417c-4d8e-b624-0f71afa9c75d
+  tls: true
+  servername: sni.111000.v6.navy
+  network: ws
+  ws-opts:
+    path: /?ed=2560
+    headers:
+      Host: sni.111000.v6.navy
+- name: 法国 25
+  server: 2001:bc8:32d7:302::10
+  port: 44579
+  type: vmess
+  uuid: 8e34e170-13ae-4892-9d20-05962acc9f84
+  alterId: 0
+  cipher: auto
+  tls: false
   skip-cert-verify: false
   network: ws
   ws-opts:
-    path: /?BIA_TELEGRAM@AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1_AZARBAYJAB1
+    path: /?ed=2048
     headers:
       Host: TURK1.NET.NET
 - name: 法国 31
@@ -7309,6 +7409,18 @@ proxies:
       Host: TABRIZ.NET
 - name: 法国 46
   server: 2001:bc8:32d7:302::10
+  port: 44579
+  type: vmess
+  uuid: 8e34e170-13ae-4892-9d20-05962acc9f84
+  alterId: 0
+  cipher: auto
+  tls: false
+  skip-cert-verify: false
+  network: ws
+  ws-opts:
+    path: /?ed=2048@V2Ray_hiddify10--https://t.me/V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--V2Ray_hiddify10--https://t.me/V2Ray_hiddify10
+- name: 法国 41
+  server: 2001:bc8:32d7:302::11
   port: 44579
   type: vmess
   uuid: 8e34e170-13ae-4892-9d20-05962acc9f84
@@ -8065,6 +8177,17 @@ proxies:
   servername: api.digital-help-prd.autodesk.com
   client-fingerprint: random
   network: tcp
+- name: 泰国 02
+  server: 47.81.12.38
+  port: 443
+  type: vless
+  uuid: 3e7f67de-648e-4871-b51a-a225214d41ee
+  tls: true
+  reality-opts:
+    public-key: TRP10HqKUXEQ3O-cfsq93DycfBmbJe9KM36yvSa8Mmw
+  servername: api.digital-help-prd.autodesk.com
+  client-fingerprint: random
+  network: tcp
 - name: 澳大利亚 01
   server: 192.9.162.122
   port: 1443
@@ -8548,7 +8671,7 @@ proxies:
   ws-opts:
     path: /products/source
     headers:
-      Host: edt2.btxst.eu.cc
+      Host: 639073677243791121.camry-perma.info
 - name: 美国 100
   server: 174.136.205.68
   port: 443
@@ -8565,7 +8688,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 002485ab-4166-4197-8971-94a76421689f
+  uuid: f59af649-8aaa-4af9-a853-73adb4498d6b
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -8577,7 +8700,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: c22b5ead-e101-472d-a70c-76528c5273f1
+  uuid: cbc67099-c6b1-4648-8d49-402116b5e2e2
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -8625,7 +8748,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 7d772579-bc95-40a8-a0e5-eb5a05b6d7b5
+  uuid: c22b5ead-e101-472d-a70c-76528c5273f1
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -8637,7 +8760,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 1ffb0e6f-8575-4f98-b612-148c5395d29b
+  uuid: bfeee36b-fb80-4010-89a6-f965df36d4cf
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -8649,7 +8772,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: eebf9cd2-6a0e-42a8-b9a5-05e6940a6f11
+  uuid: 74c3667c-04de-4317-84ea-d42f2ed240e3
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -8661,7 +8784,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 74c3667c-04de-4317-84ea-d42f2ed240e3
+  uuid: eebf9cd2-6a0e-42a8-b9a5-05e6940a6f11
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -8746,7 +8869,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 357e5e82-2f69-4788-a1f2-3efee1bfc6dd
+  uuid: 36e63488-73e8-4980-89ae-ded111442b29
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -8855,7 +8978,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: fea04a1f-06f1-4ef4-a7d4-ac4031b29b3b
+  uuid: 608ed42e-1cc4-4e94-a787-b9a77b68d8f7
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -10143,7 +10266,7 @@ proxies:
   client-fingerprint: chrome
   network: ws
   ws-opts:
-    path: /version
+    path: /about/go.php
     headers:
       Host: edt2.btxst.eu.cc
 - name: 美国 219
@@ -10243,9 +10366,10 @@ proxies:
   uuid: 8d2aeab8-ce98-47a6-84ec-d5b45d060b66
   tls: true
   servername: edt2.btxst.eu.cc
+  client-fingerprint: chrome
   network: ws
   ws-opts:
-    path: /movie/zh-tw
+    path: /version
     headers:
       Host: edt2.btxst.eu.cc
 - name: 美国 229
@@ -10375,12 +10499,10 @@ proxies:
   type: vless
   uuid: c1a5ecfa-8a01-4070-91e0-0328b82388ad
   tls: true
-  alpn:
-  - http%2F1.1
   servername: 639073677243396643.camry-perma.info
   network: ws
   ws-opts:
-    path: /phnkfhws?ed=2560
+    path: /phnkfhws
     headers:
       Host: 639073677243396643.camry-perma.info
 - name: 美国 24
@@ -10517,7 +10639,20 @@ proxies:
   servername: yahoo.com
   client-fingerprint: chrome
   network: tcp
-- name: 美国 36
+- name: 美国 39
+  server: 192.200.160.20
+  port: 443
+  type: vless
+  uuid: ee248e40-9468-4ef6-81b7-707a1e47c54a
+  tls: true
+  servername: 639073677243557970.camry-perma.info
+  client-fingerprint: chrome
+  network: ws
+  ws-opts:
+    path: /yaeungws
+    headers:
+      Host: 639073677243557970.camry-perma.info
+- name: 美国 40
   server: 135.84.74.43
   port: 443
   type: vless
@@ -10531,7 +10666,7 @@ proxies:
     headers:
       Host: sni.111000.v6.navy
   udp: true
-- name: 美国 37
+- name: 美国 41
   server: 209.102.207.120
   port: 443
   type: vless
@@ -10575,7 +10710,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 85b50963-cd84-4caf-8699-2540a2e34bd1
+  uuid: 9510b2a7-ecb3-4c8e-9717-0b217a822dc9
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -10614,7 +10749,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: f306a3c5-3b61-4899-b5e4-b0e207ebf4e0
+  uuid: 85b50963-cd84-4caf-8699-2540a2e34bd1
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -10627,7 +10762,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 4cfcb1c8-4355-4d26-a8c8-365b398f1be9
+  uuid: 505ef73e-daa5-4ff7-ac66-91770cb31dd4
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -10640,7 +10775,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 505ef73e-daa5-4ff7-ac66-91770cb31dd4
+  uuid: 4cfcb1c8-4355-4d26-a8c8-365b398f1be9
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -10666,7 +10801,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 708fb118-5f01-45ba-a2ea-7659c157c6e0
+  uuid: c1104d93-eba3-48d6-ba63-10574bdaa8b3
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -10689,23 +10824,22 @@ proxies:
   network: tcp
   udp: true
 - name: 美国 49
-  server: 174.136.205.68
+  server: 192.200.160.20
   port: 443
   type: vless
   uuid: 24717d75-93dc-46ad-9b99-89a33a978bf7
   tls: true
-  reality-opts:
-    public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
-    short-id: 2da72ce6
-  servername: navi.bankrate.com
-  client-fingerprint: chrome
-  network: tcp
-  udp: true
+  servername: 639073677243791121.camry-perma.info
+  network: ws
+  ws-opts:
+    path: /njvqoews?ed=2560
+    headers:
+      Host: 639073677243791121.camry-perma.info
 - name: 美国 50
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: a36734c8-f8df-460e-823e-cd38b3ca6cbf
+  uuid: 9e9c5c92-91a7-45fc-b24c-10980e297a40
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -11049,12 +11183,13 @@ proxies:
   server: 64.23.143.23
   port: 34045
   type: vless
-  uuid: d8dd94fd-540e-461d-b5d4-acebef02c22a
+  uuid: 48ff2b70-e180-582f-8866-d9a2edeed5f5
   tls: true
+  flow: xtls-rprx-vision
   reality-opts:
-    public-key: cDaDzPr3PlS3NM8lreHZbdo-Mhqz8vMBzMSkHXhGIUA
-    short-id: e8ab71d0
-  servername: visit-this-invitation-link-to-join-tg-enkelte-notif.ekt.me
+    public-key: 1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s
+    short-id: '01'
+  servername: fuck.rkn
   client-fingerprint: chrome
   network: tcp
 - name: 美国 78
@@ -11295,7 +11430,7 @@ proxies:
   server: 174.136.205.68
   port: 443
   type: vless
-  uuid: 1091e4f4-c4e3-4411-b189-5617b6fd2480
+  uuid: a7a5a5ab-4faa-4091-98b2-1f219e8a4984
   tls: true
   reality-opts:
     public-key: UT9tFQOdy54SeW_tg-XQN3QkGYoWUpO_88XFXijkrXc
@@ -12755,31 +12890,17 @@ proxies:
   cipher: aes-256-cfb
   password: f8f7aCzcPKbsF8p3
 - name: 荷兰 78
-  server: 80.74.26.226
-  port: 443
-  type: vless
-  uuid: 6202b230-417c-4d8e-b624-0f71afa9c75d
-  tls: true
-  servername: sni.111000.indevs.in
-  client-fingerprint: chrome
-  network: ws
-  ws-opts:
-    path: /?ed=2560&Telegram🇨🇳 @WangCai2
-    headers:
-      Host: sni.111000.indevs.in
+  server: 82.38.31.194
+  port: 8080
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: k1dBOmOB4oqi7Ump37a1bQ
 - name: 荷兰 79
-  server: 82.115.6.21
-  port: 443
-  type: vless
-  uuid: 6202b230-417c-4d8e-b624-0f71afa9c75d
-  tls: true
-  servername: sni.111000.indevs.in
-  client-fingerprint: chrome
-  network: ws
-  ws-opts:
-    path: /?ed=2560&Telegram🇨🇳 @WangCai2
-    headers:
-      Host: sni.111000.indevs.in
+  server: 82.38.31.205
+  port: 8080
+  type: ss
+  cipher: chacha20-ietf-poly1305
+  password: k1dBOmOB4oqi7Ump37a1bQ
 - name: 荷兰 80
   server: 86.107.197.161
   port: 443
@@ -12945,7 +13066,7 @@ proxies:
   servername: edt2.btxst.eu.cc
   network: ws
   ws-opts:
-    path: /file/member
+    path: /star
     headers:
       Host: edt2.btxst.eu.cc
 - name: 荷兰 94
@@ -13116,7 +13237,7 @@ proxies:
   cipher: aes-256-cfb
   password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
   udp: true
-- name: 越南 04
+- name: 越南 03
   server: 103.186.154.41
   port: 38388
   type: ss
@@ -13546,8 +13667,8 @@ proxies:
   type: ss
   cipher: aes-256-cfb
   password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
-- name: 越南 159
-  server: 103.186.155.141
+- name: 越南 152
+  server: 103.186.155.2
   port: 38388
   type: ss
   cipher: aes-256-cfb
@@ -13636,8 +13757,8 @@ proxies:
   type: ss
   cipher: aes-256-cfb
   password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
-- name: 越南 172
-  server: 103.186.155.231
+- name: 越南 160
+  server: 103.186.155.232
   port: 38388
   type: ss
   cipher: aes-256-cfb
@@ -13678,6 +13799,96 @@ proxies:
   type: ss
   cipher: aes-256-cfb
   password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 165
+  server: 103.186.155.235
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 166
+  server: 103.186.155.18
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 167
+  server: 103.186.155.143
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 168
+  server: 103.186.155.78
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 169
+  server: 103.186.155.142
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 17
+  server: 103.186.155.226
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 170
+  server: 103.186.155.147
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 171
+  server: 103.186.155.48
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 172
+  server: 103.186.155.106
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 173
+  server: 103.186.155.118
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 174
+  server: 103.186.155.117
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 175
+  server: 103.186.154.244
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 176
+  server: 103.186.155.136
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 177
+  server: 103.186.155.240
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 178
+  server: 103.186.154.241
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
 - name: 越南 179
   server: 103.186.155.109
   port: 38388
@@ -13692,7 +13903,7 @@ proxies:
   password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
   udp: true
 - name: 越南 180
-  server: 103.186.154.249
+  server: 103.186.155.61
   port: 38388
   type: ss
   cipher: aes-256-cfb
@@ -13972,7 +14183,7 @@ proxies:
   cipher: aes-256-cfb
   password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
 - name: 越南 222
-  server: 103.186.155.127
+  server: 103.186.154.236
   port: 38388
   type: ss
   cipher: aes-256-cfb
@@ -14353,8 +14564,74 @@ proxies:
   type: ss
   cipher: aes-256-cfb
   password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
-- name: 越南 28
-  server: 103.186.154.13
+- name: 越南 24
+  server: 103.186.155.20
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 240
+  server: 103.186.155.234
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 241
+  server: 103.186.155.134
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 242
+  server: 103.186.155.146
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 243
+  server: 103.186.155.83
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 244
+  server: 103.186.154.218
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 245
+  server: 103.186.155.124
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 246
+  server: 103.186.155.42
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 247
+  server: 103.186.155.229
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 248
+  server: 103.186.155.227
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 249
+  server: 103.186.155.144
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 25
+  server: 103.186.154.173
   port: 38388
   type: ss
   cipher: aes-256-cfb
@@ -14362,6 +14639,91 @@ proxies:
   udp: true
 - name: 越南 280
   server: 103.186.154.174
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 269
+  server: 103.186.155.22
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 27
+  server: 103.186.154.46
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+  udp: true
+- name: 越南 270
+  server: 103.186.155.77
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 271
+  server: 103.186.155.126
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 272
+  server: 103.186.155.3
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 273
+  server: 103.186.155.207
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 274
+  server: 103.186.155.123
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 275
+  server: 103.186.155.215
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 276
+  server: 103.186.155.5
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 277
+  server: 103.186.154.78
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 278
+  server: 103.186.154.228
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 279
+  server: 103.186.155.129
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 28
+  server: 103.186.155.25
+  port: 38388
+  type: ss
+  cipher: aes-256-cfb
+  password: Xn8jKdmDM00IeO%#$#fJAMtsEAEUOpH/YWYtYqDFnT0SV
+- name: 越南 280
+  server: 103.186.154.237
   port: 38388
   type: ss
   cipher: aes-256-cfb
@@ -15075,6 +15437,19 @@ proxies:
   cipher: aes-256-cfb
   password: f8f7aCzcPKbsF8p3
 - name: 阿联酋 01
+  server: 89.31.120.139
+  port: 443
+  type: vless
+  uuid: 8d2aeab8-ce98-47a6-84ec-d5b45d060b66
+  tls: true
+  servername: edt2.btxst.eu.cc
+  client-fingerprint: chrome
+  network: ws
+  ws-opts:
+    path: /blogs
+    headers:
+      Host: edt2.btxst.eu.cc
+- name: 阿联酋 02
   server: 147.78.0.182
   port: 990
   type: ss
@@ -15232,7 +15607,7 @@ proxies:
   server: 68.64.178.42
   port: 443
   type: vless
-  uuid: 8d2aeab8-ce98-47a6-84ec-d5b45d060b66
+  uuid: 394f6981-a782-4779-9a85-e6cf22935d93
   tls: true
   servername: edt2.btxst.eu.cc
   client-fingerprint: chrome
@@ -15267,6 +15642,13 @@ proxies:
     path: /vvip
     headers:
       Host: mn1ray.jagoanvip.xyz
+- name: 香港 04
+  server: 95.40.57.225
+  port: 1850
+  type: trojan
+  password: BxceQaOe
+  sni: t.me%2Fripaojiedian
+  skip-cert-verify: true
 - name: 香港 05
   server: 95.40.57.225
   port: 1850
@@ -15283,25 +15665,18 @@ proxies:
   skip-cert-verify: true
   udp: true
 - name: 香港 07
-  server: 58.152.25.253
-  port: 443
+  server: 54.46.72.234
+  port: 8025
   type: trojan
   password: BxceQaOe
   skip-cert-verify: true
   udp: true
 - name: 香港 08
-  server: 54.46.72.234
-  port: 8025
+  server: 58.152.25.253
+  port: 443
   type: trojan
-  password: trojan
-  sni: jflsjlaf.pages.dev
+  password: BxceQaOe
   skip-cert-verify: true
-  network: ws
-  ws-opts:
-    path: /
-    headers:
-      Host: jflsjlaf.pages.dev
-  udp: true
 - name: 香港 09
   server: 58.152.25.253
   port: 443
@@ -15505,6 +15880,8 @@ proxy-groups:
   - 伯利兹 07
   - 俄罗斯 01
   - 俄罗斯 02
+  - 俄罗斯 03
+  - 俄罗斯 04
   - 俄罗斯联邦 01
   - 俄罗斯联邦 02
   - 俄罗斯联邦 03
@@ -15654,6 +16031,7 @@ proxy-groups:
   - 土耳其 05
   - 土耳其 06
   - 土耳其 07
+  - 土耳其 08
   - 埃及 01
   - 塞浦路斯 01
   - 塞浦路斯 02
@@ -15771,6 +16149,7 @@ proxy-groups:
   - 德国 85
   - 德国 86
   - 德国 87
+  - 德国 88
   - 德意志联邦共和国 01
   - 德意志联邦共和国 02
   - 德意志联邦共和国 03
@@ -15813,8 +16192,6 @@ proxy-groups:
   - 新加坡 08
   - 新加坡 09
   - 新加坡 10
-  - 新加坡 11
-  - 新加坡 12
   - 日本 01
   - 日本 02
   - 日本 03
@@ -16093,18 +16470,7 @@ proxy-groups:
   - 未知地区 324
   - 未知地区 325
   - 未知地区 326
-  - 未知地区 327
-  - 未知地区 328
-  - 未知地区 329
   - 未知地区 33
-  - 未知地区 330
-  - 未知地区 331
-  - 未知地区 332
-  - 未知地区 333
-  - 未知地区 334
-  - 未知地区 335
-  - 未知地区 336
-  - 未知地区 337
   - 未知地区 34
   - 未知地区 35
   - 未知地区 36
@@ -16277,6 +16643,7 @@ proxy-groups:
   - 波兰 11
   - 波多黎各 01
   - 泰国 01
+  - 泰国 02
   - 澳大利亚 01
   - 澳大利亚 02
   - 澳大利亚 03
@@ -16301,7 +16668,6 @@ proxy-groups:
   - 瑞典 07
   - 瑞典 08
   - 瑞典 09
-  - 瑞典 10
   - 瑞士 01
   - 瑞士 02
   - 秘鲁 01
@@ -16621,6 +16987,10 @@ proxy-groups:
   - 荷兰 104
   - 荷兰 105
   - 荷兰 11
+  - 荷兰 110
+  - 荷兰 111
+  - 荷兰 112
+  - 荷兰 113
   - 荷兰 12
   - 荷兰 13
   - 荷兰 14
@@ -17042,6 +17412,7 @@ proxy-groups:
   - 阿根廷 02
   - 阿根廷 03
   - 阿联酋 01
+  - 阿联酋 02
   - 韩国 01
   - 韩国 02
   - 韩国 03
@@ -17075,9 +17446,6 @@ proxy-groups:
   - 香港 17
   - 香港 18
   - 香港 19
-  - 香港 20
-  - 香港 21
-  - 香港 22
   - 马其顿 01
   - 马来西亚 01
   - 马来西亚 02
