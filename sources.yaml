@@ -47,6 +47,7 @@ EXTERNAL_URLS:
 - https://raw.githubusercontent.com/Barabama/FreeNodes/main/nodes/ndnode.txt
 - https://raw.githubusercontent.com/Barabama/FreeNodes/main/nodes/clashmeta.txt
 - https://raw.githubusercontent.com/xiaoji235/airport-free/main/v2ray.txt
+- https://cl10jkcy8mbn.chinat.eu.org/sub?uuid=26524cce-d514-4014-a426-365fb266a14d&host=l1tfe1d07ogu.chinam.indevs.in&path=/danfeng?ed=2560&ech=1
 DATE_TEMPLATES:
 - https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.yml
 - https://clashgithub.com/wp-content/uploads/rss/{YYYYMMDD}.txt
