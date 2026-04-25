@@ -1,4 +1,4 @@
-# clash节点、免费clash节点、clash订阅链接、clash免费节点、clash科学上网、clash翻墙、clash for windows、clash教程 每日更新  更新时间 2026-04-25 14:09:58  
+# clash节点、免费clash节点、clash订阅链接、clash免费节点、clash科学上网、clash翻墙、clash for windows、clash教程 每日更新  更新时间 2026-04-25 17:35:48  
 所有免费clash节点都爬取自网络，请勿用于非法用途 。
 
 ## 客户端：
@@ -12242,6 +12242,7 @@ rules:
   - DOMAIN,1sdb30buy.6u13v.adobestats.io,🍃 应用净化
   - DOMAIN,hp3dc7pzx.6u13v.adobestats.io,🍃 应用净化
   - DOMAIN,z5px9q1n.6u13v.adobestats.io,🍃 应用净化
+  - DOMAIN,190t7vjnf.xwk4b.adobestats.io,🍃 应用净化
   - DOMAIN-SUFFIX,tonec.com,🍃 应用净化
   - DOMAIN-SUFFIX,registeridm.com,🍃 应用净化
   - DOMAIN-SUFFIX,internetdownloadmanager.com,🍃 应用净化
@@ -15974,6 +15975,7 @@ rules:
   - DOMAIN,1sdb30buy.6u13v.adobestats.io,🍃 应用净化
   - DOMAIN,hp3dc7pzx.6u13v.adobestats.io,🍃 应用净化
   - DOMAIN,z5px9q1n.6u13v.adobestats.io,🍃 应用净化
+  - DOMAIN,190t7vjnf.xwk4b.adobestats.io,🍃 应用净化
   - DOMAIN-SUFFIX,tonec.com,🍃 应用净化
   - DOMAIN-SUFFIX,registeridm.com,🍃 应用净化
   - DOMAIN-SUFFIX,internetdownloadmanager.com,🍃 应用净化
